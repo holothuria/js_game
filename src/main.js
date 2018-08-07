@@ -199,9 +199,14 @@ function draw() {
 
 
 
-// クリック時処理
 window.addEventListener("click",function(event){
+	click();
 
+});
+
+// クリック時処理
+function click(){
+	
 	if (status.touchDirection == 2) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
@@ -234,10 +239,7 @@ window.addEventListener("click",function(event){
 		status.remAirJump -= 1;
 	}
 	
-	
-
-});
-
+}
 
 
 
