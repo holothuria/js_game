@@ -13,7 +13,7 @@ param = new parameters();
 // ålŒö‚Ì¶¬
 player = new actor();
 player.img.file = new Image();
-player.img.file.src = "game/player.png";
+player.img.file.src = "img/player.png";
 
 player.positionX = 0;
 player.positionY = 0;
