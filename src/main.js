@@ -199,7 +199,7 @@ function draw() {
 
 
 
-window.addEventListener("click",clickEvent);
+document.addEventListener("click",clickEvent);
 
 // ƒNƒŠƒbƒNˆ—
 function clickEvent(event){
