@@ -199,13 +199,10 @@ function draw() {
 
 
 
-window.addEventListener("click",function(event){
-	click();
-
-});
+window.addEventListener("click",clickEvent);
 
 // ƒNƒŠƒbƒNˆ—
-function click(){
+function clickEvent(event){
 	
 	if (status.touchDirection == 2) {
 		if (event.pageX < 160) {
