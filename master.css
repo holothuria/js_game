@@ -1,0 +1,13 @@
+
+
+#viewLayer{
+	position: relative;
+}
+
+
+#viewLayer canvas {
+	position: absolute;
+	border: solid 2px #00aa00;
+	
+}
+
