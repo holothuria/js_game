@@ -112,20 +112,20 @@ function running(){
 
 
 // 開始処理
-function start()
-{
-
+function start(){
+	
 	canvas1 = document.getElementById("layer1");   // キャンバス要素の取得
 	ctx1 = canvas1.getContext("2d");   // キャンバスからコンテキストを取得
-
+	
 	canvas2 = document.getElementById("layer2");
 	ctx2 = canvas2.getContext("2d");
-
-
+	
+	
 	// 画像サイズ取得
 	player.img.width = player.img.file.naturalWidth;
 	player.img.height = player.img.file.naturalHeight;
-
+	
+	
 	timerID = setInterval('draw()',50);
 }
 
@@ -172,51 +172,51 @@ function draw() {
 	// 画面端の判定
 	if (player.positionX <= 0) {
 		player.positionX = 0;
+		status.tchWalDirection |= dirConst.LEFT;
 		if ((status.tchwalDirection & dirConst.BOTTOM) !== 0) {
 			player.vectorX = 0.1;
 			
 		} else {
-			status.tchWalDirection | dirConst.LEFT;
 			player.vectorY = 0.5;
 			
 			status.climbWallFlag = true;
 		}
 		
 	} else {
-		status.tchWalDirection & (15 ^ dirConst.LEFT);
+		status.tchWalDirection &= (15 ^ dirConst.LEFT);
 	
 	}
 	if (player.positionY <= 0) {
 		player.positionY = 0;
-		status.tchWalDirection | dirConst.TOP;
+		status.tchWalDirection |= dirConst.TOP;
+		
 	} else {
-		status.tchWalDirection & (15 ^ dirConst.TOP);
+		status.tchWalDirection &= (15 ^ dirConst.TOP);
 	
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
+		status.tchWalDirection |= dirConst.RIGHT;
 		if ((status.tchwalDirection & dirConst.BOTTOM) !== 0) {
 			player.vectorX = -0.1;
 			
 		} else {
-			status.tchWalDirection | dirConst.RIGHT;
 			player.vectorY = 0.5;
-			
 			status.climbWallFlag = true;
 		}
 		
 	} else {
-		status.tchWalDirection & (15 ^ dirConst.RIGHT);
+		status.tchWalDirection &= (15 ^ dirConst.RIGHT);
 		
 	}
 	if ((400 - player.img.height) <= player.positionY) {
 		player.positionY = 400 - player.img.height;
 		player.vectorY = 0;
-		status.tchWalDirection | dirConst.BOTTOM;
+		status.tchWalDirection |= dirConst.BOTTOM;
 		status.remAirJump = 1;
 		
 	} else {
-		status.tchWalDirection & (15 ^ dirConst.BOTTOM);
+		status.tchWalDirection &= (15 ^ dirConst.BOTTOM);
 		
 	}
 
