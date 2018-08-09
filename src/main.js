@@ -75,7 +75,7 @@ function actor(){
 
 // èdóÕ
 function gravity(){
-	player.vectorY -= 0.8;
+	player.vectorY += 0.8;
 	
 }
 
