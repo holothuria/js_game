@@ -203,8 +203,13 @@ function draw() {
 
 document.addEventListener("click",clickEvent);
 
+
 // ƒNƒŠƒbƒNˆ—
 function clickEvent(event){
+	
+	player.vectorX = -100;
+	
+	
 	
 	if (status.tchWalDirection === 2) {
 		if (event.pageX < 160) {
