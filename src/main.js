@@ -97,7 +97,7 @@ function airResist(){
 // ëñçs
 function running(){
 
-	if (status.isTouchBottom == true) {
+	if (status.isTouchBottom === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
