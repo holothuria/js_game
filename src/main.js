@@ -229,7 +229,7 @@ document.addEventListener("click",clickEvent);
 // ƒNƒŠƒbƒNˆ—
 function clickEvent(event){
 	
-	if (status.tchWalDirection === 2) {
+	if ((status.tchWalDirection & 1) === 1) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
