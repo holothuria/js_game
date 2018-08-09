@@ -7,6 +7,9 @@ ctx2     = null;   // コンテキスト
 timerID = -1;   // タイマー
 
 
+dirConst = new directionConst();
+
+
 status = new playerStatus();
 param = new parameters();
 
@@ -78,7 +81,7 @@ function gravity(){
 
 // 抵抗
 function airResist(){
-	if (status.tchWalDirection === 0) {
+	if ((status.tchWalDirection === 0) || (status.tchWalDirection === dirConst.TOP)) {
 		if (0.1 < player.vectorX) {
 			player.vectorX -= airResist;
 		
@@ -93,7 +96,7 @@ function airResist(){
 // 走行
 function running(){
 
-	if ((status.tchWalDirection & 1) === 1) {
+	if ((status.tchWalDirection & dirConst.BOTTOM) !== 0) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
@@ -169,51 +172,51 @@ function draw() {
 	// 画面端の判定
 	if (player.positionX <= 0) {
 		player.positionX = 0;
-		if ((status.tchwalDirection & 1) === 1) {
+		if ((status.tchwalDirection & dirConst.BOTTOM) !== 0) {
 			player.vectorX = 0.1;
 			
 		} else {
-			status.tchWalDirection | 2;
+			status.tchWalDirection | dirConst.LEFT;
 			player.vectorY = 0.5;
 			
 			status.climbWallFlag = true;
 		}
 		
 	} else {
-		status.tchWalDirection & 13;
+		status.tchWalDirection & (15 ^ dirConst.LEFT);
 	
 	}
 	if (player.positionY <= 0) {
 		player.positionY = 0;
-		status.tchWalDirection | 8;
+		status.tchWalDirection | dirConst.TOP;
 	} else {
-		status.tchWalDirection & 7;
+		status.tchWalDirection & (15 ^ dirConst.TOP);
 	
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
-		if ((status.tchwalDirection & 1) === 1) {
+		if ((status.tchwalDirection & dirConst.BOTTOM) !== 0) {
 			player.vectorX = -0.1;
 			
 		} else {
-			status.tchWalDirection | 4;
+			status.tchWalDirection | dirConst.RIGHT;
 			player.vectorY = 0.5;
 			
 			status.climbWallFlag = true;
 		}
 		
-		
 	} else {
-		status.tchWalDirection & 11;
+		status.tchWalDirection & (15 ^ dirConst.RIGHT);
 		
 	}
 	if ((400 - player.img.height) <= player.positionY) {
 		player.positionY = 400 - player.img.height;
 		player.vectorY = 0;
-		status.tchWalDirection | 1;
+		status.tchWalDirection | dirConst.BOTTOM;
 		status.remAirJump = 1;
+		
 	} else {
-		status.tchWalDirection & 14;
+		status.tchWalDirection & (15 ^ dirConst.BOTTOM);
 		
 	}
 
@@ -229,7 +232,7 @@ document.addEventListener("click",clickEvent);
 // クリック時処理
 function clickEvent(event){
 	
-	if ((status.tchWalDirection & 1) === 1) {
+	if ((status.tchWalDirection & dirConst.BOTTOM) !== 0) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -281,4 +284,19 @@ function stop()
 	clearInterval(timerID);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	timerID = -1;
+}
+
+
+
+
+
+
+
+
+function directionConst(){
+	var this.BOTTOM = 1;
+	var this.LEFT = 2;
+	var this.RIGET = 4;
+	var this.TOP = 8;
+
 }
