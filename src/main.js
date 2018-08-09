@@ -168,7 +168,6 @@ function draw() {
 	player.positionY += player.vectorY;
 
 
-	status.climbWallFlag = false;
 
 	// ‰æ–Ê’[‚Ì”»’è
 	if (player.positionX <= 0) {
@@ -180,7 +179,6 @@ function draw() {
 		} else {
 			player.vectorY = 0.5;
 			
-			status.climbWallFlag = true;
 		}
 		
 	} else {
@@ -203,7 +201,7 @@ function draw() {
 			
 		} else {
 			player.vectorY = 0.5;
-			status.climbWallFlag = true;
+			
 		}
 		
 	} else {
@@ -243,7 +241,7 @@ function clickEvent(event){
 		player.vectorY = param.jumpVecY;
 		
 		
-	} else if (status.climbWallFlag === true) {
+	} else if ((status.isTouchLeft === true) || (status.isTouchRight === true)) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -266,11 +264,6 @@ function clickEvent(event){
 	}
 	
 }
-
-
-
-
-
 
 
 
