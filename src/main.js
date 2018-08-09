@@ -25,7 +25,7 @@ player.vectorY = param.maxRunSpd;
 
 
 function playerStatus(){
-	this.touchDirection = -1;
+	this.tchWalDirection = -1;
 	this.remAirJump = 0;
 	
 	this.climbWallFlag = false;
@@ -36,6 +36,8 @@ function parameters(){
 
 	this.maxRunSpd = 5;
 	this.runAccel = 0.3;
+	
+	this.airResist = 0.1;
 	
 	this.jumpVecX = 5;
 	this.jumpVecY = -12;
@@ -76,12 +78,12 @@ function gravity(){
 
 // 抵抗
 function airResist(){
-	if (status.touchDirection == -1) {
+	if (status.tchWalDirection === -1) {
 		if (0.1 < player.vectorX) {
-			player.vectorX -= 0.1;
+			player.vectorX -= airResist;
 		
 		} else if (player.vectorX < -0.1) {
-			player.vectorX += 0.1;
+			player.vectorX += airResist;
 		}
 		
 	}
@@ -91,7 +93,7 @@ function airResist(){
 // 走行
 function running(){
 
-	if (status.touchDirection == 2) {
+	if (status.tchWalDirection === 2) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
@@ -162,13 +164,13 @@ function draw() {
 	player.positionY += player.vectorY;
 
 
-	status.touchDirection = -1;
+	status.tchWalDirection = -1;
 	status.climbWallFlag = false;
 
 	// 画面端の判定
 	if (player.positionX <= 0) {
 		player.positionX = 0;
-		status.touchDirection = 4;
+		status.tchWalDirection = 4;
 		player.vectorY = 0.5;
 		status.climbWallFlag = true;
 		
@@ -176,11 +178,11 @@ function draw() {
 	}
 	if (player.positionY <= 0) {
 		player.positionY = 0;
-		status.touchDirection = 8;
+		status.tchWalDirection = 8;
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
-		status.touchDirection = 6;
+		status.tchWalDirection = 6;
 		player.vectorY = 0.5;
 		status.climbWallFlag = true;
 
@@ -189,7 +191,7 @@ function draw() {
 	if ((400 - player.img.height) <= player.positionY) {
 		player.positionY = 400 - player.img.height;
 		player.vectorY = 0;
-		status.touchDirection = 2;
+		status.tchWalDirection = 2;
 		status.remAirJump = 1;
 	}
 
@@ -204,7 +206,7 @@ document.addEventListener("click",clickEvent);
 // クリック時処理
 function clickEvent(event){
 	
-	if (status.touchDirection == 2) {
+	if (status.tchWalDirection === 2) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -214,7 +216,7 @@ function clickEvent(event){
 		player.vectorY = param.jumpVecY;
 		
 		
-	} else if (status.climbWallFlag == true) {
+	} else if (status.climbWallFlag === true) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
