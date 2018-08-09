@@ -294,9 +294,9 @@ function stop()
 
 
 function directionConst(){
-	var this.BOTTOM = 1;
-	var this.LEFT = 2;
-	var this.RIGET = 4;
-	var this.TOP = 8;
+	this.BOTTOM = 1;
+	this.LEFT = 2;
+	this.RIGET = 4;
+	this.TOP = 8;
 
 }
