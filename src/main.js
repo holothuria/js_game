@@ -170,22 +170,33 @@ function draw() {
 	// 画面端の判定
 	if (player.positionX <= 0) {
 		player.positionX = 0;
-		status.tchWalDirection = 4;
-		player.vectorY = 0.5;
-		status.climbWallFlag = true;
+		if (status.tchwalDirection === 2) {
+			player.vectorX = 0.1;
+			
+		} else {
+			status.tchWalDirection = 4;
+			player.vectorY = 0.5;
+			
+			status.climbWallFlag = true;
+		}
 		
-	} else {
-	}
+	} 
 	if (player.positionY <= 0) {
 		player.positionY = 0;
 		status.tchWalDirection = 8;
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
-		status.tchWalDirection = 6;
-		player.vectorY = 0.5;
-		status.climbWallFlag = true;
-
+		if (status.tchwalDirection === 2) {
+			player.vectorX = -0.1;
+			
+		} else {
+			status.tchWalDirection = 6;
+			player.vectorY = 0.5;
+			
+			status.climbWallFlag = true;
+		}
+		
 		
 	}
 	if ((400 - player.img.height) <= player.positionY) {
@@ -206,10 +217,6 @@ document.addEventListener("click",clickEvent);
 
 // クリック時処理
 function clickEvent(event){
-	
-	player.vectorX = -100;
-	
-	
 	
 	if (status.tchWalDirection === 2) {
 		if (event.pageX < 160) {
