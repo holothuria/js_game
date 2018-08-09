@@ -40,7 +40,7 @@ function parameters(){
 	this.maxRunSpd = 5;
 	this.runAccel = 0.3;
 	
-	this.airResist = 0.1;
+	this.airRes = 0.1;
 	
 	this.jumpVecX = 5;
 	this.jumpVecY = -12;
@@ -83,10 +83,10 @@ function gravity(){
 function airResist(){
 	if ((status.tchWalDirection === 0) || (status.tchWalDirection === dirConst.TOP)) {
 		if (0.1 < player.vectorX) {
-			player.vectorX -= airResist;
+			player.vectorX -= param.airRes;
 		
 		} else if (player.vectorX < -0.1) {
-			player.vectorX += airResist;
+			player.vectorX += param.airRes;
 		}
 		
 	}
