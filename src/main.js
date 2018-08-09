@@ -25,7 +25,7 @@ player.vectorY = param.maxRunSpd;
 
 
 function playerStatus(){
-	this.tchWalDirection = -1;
+	this.tchWalDirection = 0;
 	this.remAirJump = 0;
 	
 	this.climbWallFlag = false;
@@ -78,7 +78,7 @@ function gravity(){
 
 // íÔçR
 function airResist(){
-	if (status.tchWalDirection === -1) {
+	if (status.tchWalDirection === 0) {
 		if (0.1 < player.vectorX) {
 			player.vectorX -= airResist;
 		
@@ -93,7 +93,7 @@ function airResist(){
 // ëñçs
 function running(){
 
-	if (status.tchWalDirection === 2) {
+	if ((status.tchWalDirection & 1) === 1) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
@@ -164,46 +164,57 @@ function draw() {
 	player.positionY += player.vectorY;
 
 
-	status.tchWalDirection = -1;
 	status.climbWallFlag = false;
 
 	// âÊñ í[ÇÃîªíË
 	if (player.positionX <= 0) {
 		player.positionX = 0;
-		if (status.tchwalDirection === 2) {
+		if ((status.tchwalDirection & 1) === 1) {
 			player.vectorX = 0.1;
 			
 		} else {
-			status.tchWalDirection = 4;
+			status.tchWalDirection | 2;
 			player.vectorY = 0.5;
 			
 			status.climbWallFlag = true;
 		}
 		
-	} 
+	} else {
+		status.tchWalDirection & 13;
+	
+	}
 	if (player.positionY <= 0) {
 		player.positionY = 0;
-		status.tchWalDirection = 8;
+		status.tchWalDirection | 8;
+	} else {
+		status.tchWalDirection & 7;
+	
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
-		if (status.tchwalDirection === 2) {
+		if ((status.tchwalDirection & 1) === 1) {
 			player.vectorX = -0.1;
 			
 		} else {
-			status.tchWalDirection = 6;
+			status.tchWalDirection | 4;
 			player.vectorY = 0.5;
 			
 			status.climbWallFlag = true;
 		}
 		
+		
+	} else {
+		status.tchWalDirection & 11;
 		
 	}
 	if ((400 - player.img.height) <= player.positionY) {
 		player.positionY = 400 - player.img.height;
 		player.vectorY = 0;
-		status.tchWalDirection = 2;
+		status.tchWalDirection | 1;
 		status.remAirJump = 1;
+	} else {
+		status.tchWalDirection & 14;
+		
 	}
 
 
