@@ -45,7 +45,7 @@ function parameters(){
 	
 	this.jumpVecX = 5;
 	this.jumpVecY = -12;
-	this.airJumpVecX = 3;
+	this.airJumpVecX = 4.5;
 	this.airJumpVecY = -10;
 	
 
