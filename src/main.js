@@ -8,7 +8,7 @@ timerID = -1;   // タイマー
 
 
 
-status = new playerStatus();
+pStatus = new playerStatus();
 param = new parameters();
 
 // 主人公の生成
@@ -82,7 +82,7 @@ function gravity(){
 
 // 抵抗
 function airResist(){
-	if ((status.isTouchBottom === false) && (status.isTouchLeft === false) && (status.isTouchRight === false)) {
+	if ((pStatus.isTouchBottom === false) && (pStatus.isTouchLeft === false) && (pStatus.isTouchRight === false)) {
 		if (0.1 < player.vectorX) {
 			player.vectorX -= param.airRes;
 		
@@ -97,7 +97,7 @@ function airResist(){
 // 走行
 function running(){
 
-	if (status.isTouchBottom === true) {
+	if (pStatus.isTouchBottom === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
@@ -172,8 +172,8 @@ function draw() {
 	// 画面端の判定
 	if (player.positionX <= 0) {
 		player.positionX = 0;
-		status.isTouchLeft = true;
-		if (status.isTouchBottom === true) {
+		pStatus.isTouchLeft = true;
+		if (pStatus.isTouchBottom === true) {
 			player.vectorX = 0.1;
 			
 		} else {
@@ -182,21 +182,21 @@ function draw() {
 		}
 		
 	} else {
-		status.isTouchLeft = false;
+		pStatus.isTouchLeft = false;
 	
 	}
 	if (player.positionY <= 0) {
 		player.positionY = 0;
-		status.isTouchTop = true;
+		pStatus.isTouchTop = true;
 		
 	} else {
-		status.isTouchTop = false;
+		pStatus.isTouchTop = false;
 	
 	}
 	if ((300 - player.img.width) <= player.positionX) {
 		player.positionX = 300 - player.img.width;
-		status.isTouchRight = true;
-		if (status.isTouchBottom === true) {
+		pStatus.isTouchRight = true;
+		if (pStatus.isTouchBottom === true) {
 			player.vectorX = -0.1;
 			
 		} else {
@@ -205,17 +205,17 @@ function draw() {
 		}
 		
 	} else {
-		status.isTouchRight = false;
+		pStatus.isTouchRight = false;
 		
 	}
 	if ((400 - player.img.height) <= player.positionY) {
 		player.positionY = 400 - player.img.height;
 		player.vectorY = 0;
-		status.isTouchBottom = true;
-		status.remAirJump = 1;
+		pStatus.isTouchBottom = true;
+		pStatus.remAirJump = 1;
 		
 	} else {
-		status.isTouchBottom = false;
+		pStatus.isTouchBottom = false;
 		
 	}
 
@@ -231,7 +231,7 @@ document.addEventListener("click",clickEvent);
 // クリック時処理
 function clickEvent(event){
 	
-	if (status.isTouchBottom === true) {
+	if (pStatus.isTouchBottom === true) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -241,7 +241,7 @@ function clickEvent(event){
 		player.vectorY = param.jumpVecY;
 		
 		
-	} else if ((status.isTouchLeft === true) || (status.isTouchRight === true)) {
+	} else if ((pStatus.isTouchLeft === true) || (pStatus.isTouchRight === true)) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -251,7 +251,7 @@ function clickEvent(event){
 		player.vectorY = param.jumpVecY;
 		
 	
-	} else if (1 <= status.remAirJump) {
+	} else if (1 <= pStatus.remAirJump) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.airJumpVecX;
 		} else {
@@ -260,7 +260,7 @@ function clickEvent(event){
 		
 		player.vectorY = param.airJumpVecY;
 		
-		status.remAirJump -= 1;
+		pStatus.remAirJump -= 1;
 	}
 	
 }
