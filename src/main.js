@@ -1,30 +1,62 @@
+
+
+screenWid = 256;	// screen幅
+screenHei = 320;	// screen高さ
+chipWid = 32;	// 1マスの幅
+chipHei = 32;	// 1マスの高さ
+
+crsRowNum = -1;	// 読み込んだコースの行数
+
 canvas1  = null;   // レイヤー1
-ctx1     = null;   // コンテキスト
 canvas2  = null;   // レイヤー2
-ctx2     = null;   // コンテキスト
 
 
 timerID = -1;   // タイマー
 
 
-
+// オブジェクトの定義
+ctx = new ctxMng();
 pStatus = new playerStatus();
 param = new parameters();
 
 // 主人公の生成
 player = new actor();
-player.img.file = new Image();
 player.img.file.src = "../img/player.png";
 
-player.positionX = 0;
-player.positionY = 0;
+player.posX = 0;
+player.posY = 0;
 player.vectorX = param.maxRunSpd;
 player.vectorY = param.maxRunSpd;
 
 
 
 
+// 地形配置物オブジェクトの生成
+blcInf = [
+	new terrainBlock(""),
+	new terrainBlock("../img/block.png")
+];
 
+
+// コースデータ作成
+courseData = [
+	[0, 0, 0, 0, 0, 0, 0, 1],
+	[1, 1, 0, 1, 1, 0, 1, 1]
+	
+];
+
+
+
+
+// コンテキスト管理
+function ctxMng(){
+	this.blc = null;	// 地形配置物
+	this.ple = null;	// 主人公
+	
+}
+
+
+// プレイヤー状態
 function playerStatus(){
 	this.remAirJump = 0;
 	
@@ -36,6 +68,8 @@ function playerStatus(){
 
 }
 
+
+// 変更されないパラメータ
 function parameters(){
 
 	this.maxRunSpd = 5;
@@ -48,22 +82,14 @@ function parameters(){
 	this.airJumpVecX = 4.5;
 	this.airJumpVecY = -10;
 	
-
-
 }
 
-
-// キャラクターの情報オブジェクト
+// 変更されるキャラクター情報
 function actor(){
-	this.img = function(){
-		this.file = null;
-		this.width = 0;
-		this.height = 0;
+	this.img = new imgInfo();
 
-	}
-
-	this.positionX = 0;
-	this.positionY = 0;
+	this.posX = 0;
+	this.posY = 0;
 
 	this.posBfrX = 0;
 	this.posBfrY = 0;
@@ -72,6 +98,27 @@ function actor(){
 	this.vectorY = 0;
 
 }
+
+
+// 画像情報保持
+function imgInfo(){
+	this.file = new Image();
+	this.width = 0;
+	this.height = 0;
+
+}
+
+
+// 地形ブロック
+function terrainBlock(filePath){
+	this.file = new Image();
+	this.file.src = filePath;
+
+	
+}
+
+
+
 
 
 // 重力
@@ -96,7 +143,6 @@ function airResist(){
 
 // 走行
 function running(){
-
 	if (pStatus.isTouchBottom === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
@@ -108,18 +154,20 @@ function running(){
 		}
 	}
 	
-	
 }
+
+
+
 
 
 // 開始処理
 function start(){
 	
 	canvas1 = document.getElementById("layer1");   // キャンバス要素の取得
-	ctx1 = canvas1.getContext("2d");   // キャンバスからコンテキストを取得
+	ctx.blc = canvas1.getContext("2d");   // キャンバスからコンテキストを取得
 	
 	canvas2 = document.getElementById("layer2");
-	ctx2 = canvas2.getContext("2d");
+	ctx.ple = canvas2.getContext("2d");
 	
 	
 	// 画像サイズ取得
@@ -127,98 +175,50 @@ function start(){
 	player.img.height = player.img.file.naturalHeight;
 	
 	
-	timerID = setInterval('draw()',50);
+	timerID = setInterval('main()',50);
 }
 
 
 
 // メイン処理
-function draw() {
+function main() {
 
 	gravity();
 	airResist();
 	running();
 
 	// キャラがいた場所の描画リセット
-	ctx2.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
+	ctx.ple.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
 
 	// 描画
-	ctx2.drawImage(player.img.file, player.positionX, player.positionY);
+	ctx.ple.drawImage(player.img.file, player.posX, player.posY);
+	
+	courseDrow();
+//	ctx.blc.drawImage(blcInf[1].file, 200, 300);
 
-//	var imageData = ctx2.getImageData(0, 0, 300, 400);
+//	var imageData = ctx.ple.getImageData(0, 0, 300, 400);
 
 
 
-//	ctx1.putImageData(imageData, 0, 0);
+//	ctx.blc.putImageData(imageData, 0, 0);
 
-//	ctx1.beginPath();
-//	ctx1.moveTo(0, 0);
-//	ctx1.lineTo(player.positionX + 8 , player.positionY + 8);
-//	ctx1.stroke();
+//	ctx.blc.beginPath();
+//	ctx.blc.moveTo(0, 0);
+//	ctx.blc.lineTo(player.posX + 8 , player.posY + 8);
+//	ctx.blc.stroke();
 
 
 
 
 	// 移動前座標の保存
-	player.posBfrX = player.positionX;
-	player.posBfrY = player.positionY;
+	player.posBfrX = player.posX;
+	player.posBfrY = player.posY;
 
 	// 座標移動
-	player.positionX += player.vectorX;
-	player.positionY += player.vectorY;
+	player.posX += player.vectorX;
+	player.posY += player.vectorY;
 
-
-
-	// 画面端の判定
-	if (player.positionX <= 0) {
-		player.positionX = 0;
-		pStatus.isTouchLeft = true;
-		if (pStatus.isTouchBottom === true) {
-			player.vectorX = 0.1;
-			
-		} else {
-			player.vectorY = 0.5;
-			
-		}
-		
-	} else {
-		pStatus.isTouchLeft = false;
-	
-	}
-	if (player.positionY <= 0) {
-		player.positionY = 0;
-		pStatus.isTouchTop = true;
-		
-	} else {
-		pStatus.isTouchTop = false;
-	
-	}
-	if ((300 - player.img.width) <= player.positionX) {
-		player.positionX = 300 - player.img.width;
-		pStatus.isTouchRight = true;
-		if (pStatus.isTouchBottom === true) {
-			player.vectorX = -0.1;
-			
-		} else {
-			player.vectorY = 0.5;
-			
-		}
-		
-	} else {
-		pStatus.isTouchRight = false;
-		
-	}
-	if ((400 - player.img.height) <= player.positionY) {
-		player.positionY = 400 - player.img.height;
-		player.vectorY = 0;
-		pStatus.isTouchBottom = true;
-		pStatus.remAirJump = 1;
-		
-	} else {
-		pStatus.isTouchBottom = false;
-		
-	}
-
+	touchJudge();
 
 
 }
@@ -267,6 +267,92 @@ function clickEvent(event){
 
 
 
+// コース描画
+function courseDrow(){
+	if (crsRowNum === 0) {
+		return;
+	}
+	
+	crsRowNum = 0;
+	
+	var drwPosX = 0;
+	var drwPosY = 0;
+	
+	courseData.forEach(function(rowData){
+		rowData.forEach(function(chipData){
+			if (chipData !== 0) {
+				ctx.blc.drawImage(blcInf[chipData].file, drwPosX, drwPosY);
+				
+			}
+			
+			drwPosX += chipWid;
+			
+		});
+		
+		drwPosX = 0;
+		drwPosY += chipHei;
+		
+	});
+	
+}
+
+
+
+// 接触判定
+function touchJudge(){
+	
+	
+	// 画面端の判定
+	if (player.posX <= 0) {
+		player.posX = 0;
+		pStatus.isTouchLeft = true;
+		if (pStatus.isTouchBottom === true) {
+			player.vectorX = 0.1;
+			
+		} else {
+			player.vectorY = 0.5;
+			
+		}
+		
+	} else {
+		pStatus.isTouchLeft = false;
+	
+	}
+	if (player.posY <= 0) {
+		player.posY = 0;
+		pStatus.isTouchTop = true;
+		
+	} else {
+		pStatus.isTouchTop = false;
+	
+	}
+	if ((screenWid - player.img.width) <= player.posX) {
+		player.posX = screenWid - player.img.width;
+		pStatus.isTouchRight = true;
+		if (pStatus.isTouchBottom === true) {
+			player.vectorX = -0.1;
+			
+		} else {
+			player.vectorY = 0.5;
+			
+		}
+		
+	} else {
+		pStatus.isTouchRight = false;
+		
+	}
+	if ((screenHei - player.img.height) <= player.posY) {
+		player.posY = screenHei - player.img.height;
+		player.vectorY = 0;
+		pStatus.isTouchBottom = true;
+		pStatus.remAirJump = 1;
+		
+	} else {
+		pStatus.isTouchBottom = false;
+		
+	}
+
+}
 
 
 
