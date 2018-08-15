@@ -41,7 +41,15 @@ blcInf = [
 // コースデータ作成
 courseData = [
 	[0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 0, 1, 1, 0, 1, 1]
+	[1, 1, 0, 1, 1, 0, 1, 1],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 1, 1, 1, 1, 1, 1, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[1, 0, 0, 0, 0, 0, 0, 1]
 	
 ];
 
@@ -300,60 +308,118 @@ function courseDrow(){
 
 // 接触判定
 function touchJudge(){
+	var isWall = new Array(8);
 	
+	var biggerPosX = Math.floor(player.posX) + player.img.width;
+	var biggerPosY = Math.floor(player.posY) + player.img.height;
+	
+	pStatus.isTouchTop = false;
+	pStatus.isTouchLeft = false;
+	pStatus.isTouchRight = false;
+	pStatus.isTouchBottom = false;
 	
 	// 画面端の判定
 	if (player.posX <= 0) {
-		player.posX = 0;
 		pStatus.isTouchLeft = true;
-		if (pStatus.isTouchBottom === true) {
+	}
+	if (player.posY <= 0) {
+		pStatus.isTouchTop = true;
+	}
+	if ((screenWid - player.img.width) <= player.posX) {
+		pStatus.isTouchRight = true;
+	}
+	
+	if ((screenHei - player.img.height) <= player.posY) {
+		pStatus.isTouchBottom = true;
+	}
+	
+	// ブロック判定
+	isWall[0] = isInWall(player.posX, player.posY - 1);
+	isWall[1] = isInWall(biggerPosX, player.posY - 1);
+	isWall[2] = isInWall(biggerPosX + 1, player.posY);
+	isWall[3] = isInWall(biggerPosX + 1, biggerPosY);
+	isWall[4] = isInWall(biggerPosX, biggerPosY + 1);
+	isWall[5] = isInWall(player.posX, biggerPosY + 1);
+	isWall[6] = isInWall(player.posX - 1, biggerPosY);
+	isWall[7] = isInWall(player.posX - 1, player.posY);
+	
+	
+	if (isWall[0] && isWall[1]) {
+		pStatus.isTouchTop = true;
+	}
+	if (isWall[2] && isWall[3]) {
+		pStatus.isTouchRight = true;
+	}
+	if (isWall[4] && isWall[5]) {
+		pStatus.isTouchBottom = true;
+	}
+	if (isWall[6] && isWall[7]) {
+		pStatus.isTouchLeft = true;
+	}
+	
+	if (pStatus.isTouchTop) {
+		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
+		
+		
+	}
+	
+	if (pStatus.isTouchLeft) {
+		player.posX = Math.ceil(player.posX / chipWid) * chipWid;
+		if (pStatus.isTouchBottom) {
 			player.vectorX = 0.1;
 			
 		} else {
+			player.vectorX = -0.1;
 			player.vectorY = 0.5;
 			
 		}
 		
-	} else {
-		pStatus.isTouchLeft = false;
-	
 	}
-	if (player.posY <= 0) {
-		player.posY = 0;
-		pStatus.isTouchTop = true;
-		
-	} else {
-		pStatus.isTouchTop = false;
 	
-	}
-	if ((screenWid - player.img.width) <= player.posX) {
-		player.posX = screenWid - player.img.width;
-		pStatus.isTouchRight = true;
-		if (pStatus.isTouchBottom === true) {
+	if (pStatus.isTouchRight) {
+//		player.posX = screenWid - player.img.width;
+		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
+		if (pStatus.isTouchBottom) {
 			player.vectorX = -0.1;
 			
 		} else {
+			player.vectorX = 0.1;
 			player.vectorY = 0.5;
 			
 		}
 		
-	} else {
-		pStatus.isTouchRight = false;
-		
 	}
-	if ((screenHei - player.img.height) <= player.posY) {
-		player.posY = screenHei - player.img.height;
+	
+	if (pStatus.isTouchBottom) {
+//		player.posY = screenHei - player.img.height;
+		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
 		player.vectorY = 0;
-		pStatus.isTouchBottom = true;
 		pStatus.remAirJump = 1;
 		
-	} else {
-		pStatus.isTouchBottom = false;
-		
 	}
-
+	
+	
+	
+	
+	
 }
 
+// 座標が壁の中か判定
+function isInWall(posX, posY){
+	if (screenWid <= posX){
+		posX = screenWid - 1;
+	}
+	
+	if (screenHei <= posY){
+		posY = screenHei - 1;
+	}
+	
+	posX /= chipWid;
+	posY /= chipHei;
+	
+	return courseData[Math.floor(posY)][Math.floor(posX)] !== 0;
+
+}
 
 
 
@@ -364,5 +430,6 @@ function stop()
 	clearInterval(timerID);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	timerID = -1;
+
 }
 
