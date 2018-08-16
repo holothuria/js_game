@@ -41,15 +41,15 @@ blcInf = [
 // コースデータ作成
 courseData = [
 	[0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 0, 1, 1, 0, 1, 1],
+	[1, 1, 1, 0, 0, 0, 1, 1],
 	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 1, 1, 1, 1, 1, 1, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0],
-	[1, 0, 0, 0, 0, 0, 0, 1]
+	[0, 0, 0, 0, 0, 0, 1, 0],
+	[0, 0, 0, 0, 0, 0, 1, 0],
+	[1, 0, 0, 0, 0, 0, 0, 0]
 	
 ];
 
@@ -68,10 +68,10 @@ function ctxMng(){
 function playerStatus(){
 	this.remAirJump = 0;
 	
-	this.isTouchTop = false;
-	this.isTouchLeft = false;
-	this.isTouchRight = false;
-	this.isTouchBottom = false;
+	this.isTouchT = false;
+	this.isTouchL = false;
+	this.isTouchR = false;
+	this.isTouchB = false;
 	
 
 }
@@ -137,7 +137,7 @@ function gravity(){
 
 // 抵抗
 function airResist(){
-	if ((pStatus.isTouchBottom === false) && (pStatus.isTouchLeft === false) && (pStatus.isTouchRight === false)) {
+	if ((pStatus.isTouchB === false) && (pStatus.isTouchL === false) && (pStatus.isTouchR === false)) {
 		if (0.1 < player.vectorX) {
 			player.vectorX -= param.airRes;
 		
@@ -151,7 +151,7 @@ function airResist(){
 
 // 走行
 function running(){
-	if (pStatus.isTouchBottom === true) {
+	if (pStatus.isTouchB === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
 			if (0 < player.vectorX) {
 				player.vectorX += param.runAccel;
@@ -239,7 +239,7 @@ document.addEventListener("click",clickEvent);
 // クリック時処理
 function clickEvent(event){
 	
-	if (pStatus.isTouchBottom === true) {
+	if (pStatus.isTouchB === true) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -249,7 +249,7 @@ function clickEvent(event){
 		player.vectorY = param.jumpVecY;
 		
 		
-	} else if ((pStatus.isTouchLeft === true) || (pStatus.isTouchRight === true)) {
+	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
 		if (event.pageX < 160) {
 			player.vectorX = -param.jumpVecX;
 		} else {
@@ -313,59 +313,119 @@ function touchJudge(){
 	var biggerPosX = Math.floor(player.posX) + player.img.width;
 	var biggerPosY = Math.floor(player.posY) + player.img.height;
 	
-	pStatus.isTouchTop = false;
-	pStatus.isTouchLeft = false;
-	pStatus.isTouchRight = false;
-	pStatus.isTouchBottom = false;
+	isTchT = false;
+	isTchL = false;
+	isTchR = false;
+	isTchB = false;
 	
 	// 画面端の判定
 	if (player.posX <= 0) {
-		pStatus.isTouchLeft = true;
+		isTchL = true;
 	}
 	if (player.posY <= 0) {
-		pStatus.isTouchTop = true;
+		isTchT = true;
 	}
 	if ((screenWid - player.img.width) <= player.posX) {
-		pStatus.isTouchRight = true;
+		isTchR = true;
 	}
 	
 	if ((screenHei - player.img.height) <= player.posY) {
-		pStatus.isTouchBottom = true;
+		isTchB = true;
 	}
 	
 	// ブロック判定
-	isWall[0] = isInWall(player.posX, player.posY - 1);
-	isWall[1] = isInWall(biggerPosX, player.posY - 1);
-	isWall[2] = isInWall(biggerPosX + 1, player.posY);
-	isWall[3] = isInWall(biggerPosX + 1, biggerPosY);
-	isWall[4] = isInWall(biggerPosX, biggerPosY + 1);
-	isWall[5] = isInWall(player.posX, biggerPosY + 1);
-	isWall[6] = isInWall(player.posX - 1, biggerPosY);
-	isWall[7] = isInWall(player.posX - 1, player.posY);
-	
+//	isWall[0] = isInWall(player.posX, player.posY - 1);
+//	isWall[1] = isInWall(biggerPosX, player.posY - 1);
+//	isWall[2] = isInWall(biggerPosX + 1, player.posY);
+//	isWall[3] = isInWall(biggerPosX + 1, biggerPosY);
+//	isWall[4] = isInWall(biggerPosX, biggerPosY + 1);
+//	isWall[5] = isInWall(player.posX, biggerPosY + 1);
+//	isWall[6] = isInWall(player.posX - 1, biggerPosY);
+//	isWall[7] = isInWall(player.posX - 1, player.posY);
+
+	isWall[0] = isInWall(player.posX, player.posY);
+	isWall[1] = isInWall(biggerPosX, player.posY);
+	isWall[2] = isInWall(biggerPosX, biggerPosY);
+	isWall[3] = isInWall(player.posX, biggerPosY);
 	
 	if (isWall[0] && isWall[1]) {
-		pStatus.isTouchTop = true;
+		isTchT = true;
+	}
+	if (isWall[1] && isWall[2]) {
+		isTchR = true;
 	}
 	if (isWall[2] && isWall[3]) {
-		pStatus.isTouchRight = true;
+		isTchB = true;
 	}
-	if (isWall[4] && isWall[5]) {
-		pStatus.isTouchBottom = true;
-	}
-	if (isWall[6] && isWall[7]) {
-		pStatus.isTouchLeft = true;
+	if (isWall[3] && isWall[0]) {
+		isTchL = true;
 	}
 	
-	if (pStatus.isTouchTop) {
+	if (!(isTchT || isTchL) && isWall[0]) {
+		var diffX = chipWid - (player.posX % chipWid);
+		var diffY = chipHei - (player.posY % chipHei);
+		if (diffX <= diffY) {
+			// 同値は左
+			isTchL = true;
+		} else {
+			isTchT = true;
+		}
+	}
+	
+	if (!(isTchT || isTchR) && isWall[1]) {
+		var diffX = biggerPosX % chipWid;
+		var diffY = chipHei - (player.posY % chipHei);
+		if (diffX <= diffY) {
+			// 同値は右
+			isTchR = true;
+		} else {
+			isTchT = true;
+		}
+	}
+	
+	if (!(isTchR || isTchB) && isWall[2]) {
+		if (pStatus.isTouchB) {
+			isTchB = true;
+			
+		} else {
+			var diffX = biggerPosX % chipWid;
+			var diffY = biggerPosY % chipHei;
+			if (diffX < diffY) {
+				// 同値は下
+				isTchR = true;
+			} else {
+				isTchB = true
+			}
+		}
+	}
+	
+	if (!(isTchL || isTchB) && isWall[3]) {
+		if (pStatus.isTouchB) {
+			isTchB = true;
+			
+		} else {
+			var diffX = chipWid - (player.posX % chipWid);
+			var diffY = biggerPosY % chipHei;
+			if (diffX < diffY) {
+				// 同値は下
+				isTchL = true;
+			} else {
+				isTchB = true
+			}
+		}
+	}
+	
+	
+	
+	if (isTchT) {
 		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
-		
+		player.vectorY = 0;
 		
 	}
 	
-	if (pStatus.isTouchLeft) {
+	if (isTchL) {
 		player.posX = Math.ceil(player.posX / chipWid) * chipWid;
-		if (pStatus.isTouchBottom) {
+		if (isTchB) {
 			player.vectorX = 0.1;
 			
 		} else {
@@ -376,10 +436,10 @@ function touchJudge(){
 		
 	}
 	
-	if (pStatus.isTouchRight) {
+	if (isTchR) {
 //		player.posX = screenWid - player.img.width;
 		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
-		if (pStatus.isTouchBottom) {
+		if (isTchB) {
 			player.vectorX = -0.1;
 			
 		} else {
@@ -390,7 +450,7 @@ function touchJudge(){
 		
 	}
 	
-	if (pStatus.isTouchBottom) {
+	if (isTchB) {
 //		player.posY = screenHei - player.img.height;
 		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
 		player.vectorY = 0;
@@ -399,7 +459,10 @@ function touchJudge(){
 	}
 	
 	
-	
+	pStatus.isTouchT = isTchT;
+	pStatus.isTouchL = isTchL;
+	pStatus.isTouchR = isTchR;
+	pStatus.isTouchB = isTchB;
 	
 	
 }
