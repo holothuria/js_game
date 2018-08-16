@@ -2,6 +2,7 @@
 
 #viewLayer{
 	position: relative;
+	padding : 10px
 }
 
 
@@ -11,3 +12,7 @@
 	
 }
 
+body {
+	border: solid 5px #000000;
+	
+}
