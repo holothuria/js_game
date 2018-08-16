@@ -40,8 +40,8 @@ blcInf = [
 
 // コースデータ作成
 courseData = [
-	[0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 1, 0, 0, 0, 1, 1],
+	[0, 0, 0, 0, 0, 0, 0, 0],
+	[1, 1, 1, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 1, 0],
 	[0, 0, 0, 0, 0, 0, 1, 0],
@@ -67,6 +67,7 @@ function ctxMng(){
 // プレイヤー状態
 function playerStatus(){
 	this.remAirJump = 0;
+	this.climbFlag = false;
 	
 	this.isTouchT = false;
 	this.isTouchL = false;
@@ -89,6 +90,8 @@ function parameters(){
 	this.jumpVecY = -12;
 	this.airJumpVecX = 4.5;
 	this.airJumpVecY = -10;
+	
+	this.climbSpd = 4;
 	
 }
 
@@ -232,15 +235,32 @@ function main() {
 }
 
 
+document.addEventListener("mousedown", mousedownEvent);
+document.addEventListener("click", clickEvent);
 
-document.addEventListener("click",clickEvent);
+
+// 長押し時処理
+function mousedownEvent(event){
+	
+	if ((pStatus.isTouchR === true)) {
+		if ((screenWid / 2) < event.pageX) {
+			pStatus.climbFlag = true;
+		}
+	} else if ((pStatus.isTouchL === true)) {
+		if (event.pageX < (screenWid / 2)) {
+			pStatus.climbFlag = true;
+		}
+	
+	}
+}
 
 
 // クリック時処理
 function clickEvent(event){
+	pStatus.climbFlag = false;
 	
 	if (pStatus.isTouchB === true) {
-		if (event.pageX < 160) {
+		if (event.pageX < 130) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -250,7 +270,7 @@ function clickEvent(event){
 		
 		
 	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
-		if (event.pageX < 160) {
+		if (event.pageX < 130) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -260,7 +280,7 @@ function clickEvent(event){
 		
 	
 	} else if (1 <= pStatus.remAirJump) {
-		if (event.pageX < 160) {
+		if (event.pageX < 130) {
 			player.vectorX = -param.airJumpVecX;
 		} else {
 			player.vectorX = param.airJumpVecX;
@@ -334,15 +354,6 @@ function touchJudge(){
 	}
 	
 	// ブロック判定
-//	isWall[0] = isInWall(player.posX, player.posY - 1);
-//	isWall[1] = isInWall(biggerPosX, player.posY - 1);
-//	isWall[2] = isInWall(biggerPosX + 1, player.posY);
-//	isWall[3] = isInWall(biggerPosX + 1, biggerPosY);
-//	isWall[4] = isInWall(biggerPosX, biggerPosY + 1);
-//	isWall[5] = isInWall(player.posX, biggerPosY + 1);
-//	isWall[6] = isInWall(player.posX - 1, biggerPosY);
-//	isWall[7] = isInWall(player.posX - 1, player.posY);
-
 	isWall[0] = isInWall(player.posX, player.posY);
 	isWall[1] = isInWall(biggerPosX, player.posY);
 	isWall[2] = isInWall(biggerPosX, biggerPosY);
@@ -430,28 +441,37 @@ function touchJudge(){
 			
 		} else {
 			player.vectorX = -0.1;
-			player.vectorY = 0.5;
-			
+			if (pStatus.climbFlag) {
+				player.vectorY = -param.climbSpd;
+				
+			} else {
+				player.vectorY = 0.5;
+				
+			}
 		}
 		
 	}
 	
 	if (isTchR) {
-//		player.posX = screenWid - player.img.width;
 		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
 		if (isTchB) {
 			player.vectorX = -0.1;
 			
 		} else {
 			player.vectorX = 0.1;
-			player.vectorY = 0.5;
+			if (pStatus.climbFlag) {
+				player.vectorY = -param.climbSpd;
+				
+			} else {
+				player.vectorY = 0.5;
+				
+			}
 			
 		}
 		
 	}
 	
 	if (isTchB) {
-//		player.posY = screenHei - player.img.height;
 		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
 		player.vectorY = 0;
 		pStatus.remAirJump = 1;
