@@ -236,6 +236,8 @@ function main() {
 
 
 document.addEventListener("mousedown", mousedownEvent);
+document.addEventListener("touchstart", mousedownEvent);
+
 document.addEventListener("click", clickEvent);
 
 
