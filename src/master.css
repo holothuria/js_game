@@ -10,6 +10,12 @@
 #viewLayer canvas {
 	position: absolute;
 	border: solid 2px #00aa00;
+	
+}
+
+
+@media (aspect-ratio: 9/16)
+#viewLayer canvas {
 	width: 100vw;
 	
 }
