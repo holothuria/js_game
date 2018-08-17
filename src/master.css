@@ -3,20 +3,19 @@
 #viewLayer{
 	position: relative;
 	padding : 2px
-	
 }
 
 
 #viewLayer canvas {
 	position: absolute;
 	border: solid 2px #00aa00;
-	
 }
 
 
-@media (aspect-ratio: 9/16)
-#viewLayer canvas {
-	width: 100vw;
-	
+@media (max-aspect-ratio: 3/4){
+	#viewLayer canvas {
+		width: 100vw;
+		
+	}
 }
 
