@@ -13,9 +13,12 @@
 
 
 @media (max-aspect-ratio: 3/4){
-	#viewLayer canvas {
-		width: 95vw;
+	#viewLayer{
+		width: 100vw;
 		
 	}
+	#viewLayer canvas {
+		width: 100%;
+}
 }
 
