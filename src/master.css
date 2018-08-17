@@ -3,12 +3,14 @@
 #viewLayer{
 	position: relative;
 	padding : 2px
+	
 }
 
 
 #viewLayer canvas {
 	position: absolute;
 	border: solid 2px #00aa00;
+	width: 100vw;
 	
 }
 

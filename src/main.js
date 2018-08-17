@@ -238,7 +238,8 @@ function main() {
 document.addEventListener("mousedown", mousedownEvent);
 document.addEventListener("touchstart", mousedownEvent);
 
-document.addEventListener("click", clickEvent);
+document.addEventListener("mouseup", clickEvent);
+document.addEventListener("touchend", clickEvent);
 
 
 // ’·‰Ÿ‚µˆ—
