@@ -186,7 +186,7 @@ function start(){
 	player.img.height = player.img.file.naturalHeight;
 	
 	
-	timerID = setInterval('main()',50);
+	timerID = setInterval('main()',45);
 }
 
 
