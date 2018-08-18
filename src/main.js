@@ -1,9 +1,21 @@
 
 
-screenWid = 256;	// screen幅
-screenHei = 320;	// screen高さ
+
+
+scWidth = 256;	// screen幅
+scHeight = 320;	// screen高さ
 chipWid = 32;	// 1マスの幅
 chipHei = 32;	// 1マスの高さ
+
+if (navigator.userAgent.indexOf("Android") > 0 || navigator.userAgent.indexOf("iPhone") > 0) {
+	vpWidth = scWidth * 2;
+} else {
+	vpWidth = scWidth;
+}
+
+
+
+
 
 crsRowNum = -1;	// 読み込んだコースの行数
 
@@ -246,11 +258,11 @@ document.addEventListener("touchend", clickEvent);
 function mousedownEvent(event){
 	
 	if ((pStatus.isTouchR === true)) {
-		if ((screenWid / 2) < event.pageX) {
+		if ((scWidth / 2) < event.pageX) {
 			pStatus.climbFlag = true;
 		}
 	} else if ((pStatus.isTouchL === true)) {
-		if (event.pageX < (screenWid / 2)) {
+		if (event.pageX < (scWidth / 2)) {
 			pStatus.climbFlag = true;
 		}
 	
@@ -263,7 +275,7 @@ function clickEvent(event){
 	pStatus.climbFlag = false;
 	
 	if (pStatus.isTouchB === true) {
-		if (event.pageX < 130) {
+		if (event.pageX < (scWidth / 2)) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -273,7 +285,7 @@ function clickEvent(event){
 		
 		
 	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
-		if (event.pageX < 130) {
+		if (event.pageX < (scWidth / 2)) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -283,7 +295,7 @@ function clickEvent(event){
 		
 	
 	} else if (1 <= pStatus.remAirJump) {
-		if (event.pageX < 130) {
+		if (event.pageX < (scWidth / 2)) {
 			player.vectorX = -param.airJumpVecX;
 		} else {
 			player.vectorX = param.airJumpVecX;
@@ -348,11 +360,11 @@ function touchJudge(){
 	if (player.posY <= 0) {
 		isTchT = true;
 	}
-	if ((screenWid - player.img.width) <= player.posX) {
+	if ((scWidth - player.img.width) <= player.posX) {
 		isTchR = true;
 	}
 	
-	if ((screenHei - player.img.height) <= player.posY) {
+	if ((scHeight - player.img.height) <= player.posY) {
 		isTchB = true;
 	}
 	
@@ -492,12 +504,12 @@ function touchJudge(){
 
 // 座標が壁の中か判定
 function isInWall(posX, posY){
-	if (screenWid <= posX){
-		posX = screenWid - 1;
+	if (scWidth <= posX){
+		posX = scWidth - 1;
 	}
 	
-	if (screenHei <= posY){
-		posY = screenHei - 1;
+	if (scHeight <= posY){
+		posY = scHeight - 1;
 	}
 	
 	posX /= chipWid;
