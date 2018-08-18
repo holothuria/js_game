@@ -15,10 +15,11 @@
 @media (max-aspect-ratio: 3/4){
 	#viewLayer{
 		box-sizing: border-box;
-		width: 95vw;
+		width: 100vw;
 		
 	}
 	#viewLayer canvas {
+		box-sizing: border-box;
 		width: 100%;
 }
 }
