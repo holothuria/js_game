@@ -13,7 +13,7 @@ if (navigator.userAgent.indexOf("Android") > 0 || navigator.userAgent.indexOf("i
 	vpWidth = scWidth;
 }
 
-
+vpWidth = document.getElementById("viewLayer").getBoundingClientRect().width;
 
 
 
