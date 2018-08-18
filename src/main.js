@@ -8,12 +8,10 @@ chipWid = 32;	// 1マスの幅
 chipHei = 32;	// 1マスの高さ
 
 if (navigator.userAgent.indexOf("Android") > 0 || navigator.userAgent.indexOf("iPhone") > 0) {
-	vpWidth = scWidth * 4;
+	vpWidth = 1000;
 } else {
 	vpWidth = scWidth;
 }
-
-vpWidth = document.getElementById("viewLayer").getBoundingClientRect().width;
 
 
 
