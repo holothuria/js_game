@@ -11,6 +11,9 @@
 	border: solid 2px #00aa00;
 }
 
+#layer1 {
+	background-color: #eeffee;
+}
 
 @media (max-aspect-ratio: 3/4){
 	#viewLayer{
