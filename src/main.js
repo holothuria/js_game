@@ -8,7 +8,7 @@ chipWid = 32;	// 1マスの幅
 chipHei = 32;	// 1マスの高さ
 
 if (navigator.userAgent.indexOf("Android") > 0 || navigator.userAgent.indexOf("iPhone") > 0) {
-	vpWidth = scWidth * 2;
+	vpWidth = scWidth * 4;
 } else {
 	vpWidth = scWidth;
 }
