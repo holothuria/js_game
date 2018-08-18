@@ -18,6 +18,7 @@ body{
 
 @media (max-aspect-ratio: 3/4){
 	#viewLayer{
+		box-sizing: border-box;
 		width: 100vw;
 		
 	}
