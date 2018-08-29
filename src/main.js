@@ -1,13 +1,10 @@
 
-
-
-
 scWidth = 320;	// screen幅
 scHeight = 416;	// screen高さ
 chipWid = 32;	// 1マスの幅
 chipHei = 32;	// 1マスの高さ
 
-vpWidth = scWidth;
+vpWidth = scWidth;	//vp幅
 
 
 
@@ -249,7 +246,7 @@ document.addEventListener("mousedown", mousedownEvent);
 document.addEventListener("touchstart", mousedownEvent);
 
 document.addEventListener("mouseup", clickEvent);
-document.addEventListener("touchend", clickEvent);
+//document.addEventListener("touchend", clickEvent);
 
 
 // 長押し時処理
@@ -306,6 +303,19 @@ function clickEvent(event){
 	
 }
 
+
+// クリック・タッチ X座標 取得
+function getPageX(e){
+	var pageX = 0;
+	
+	if (e.originalEvent.changedTouches[0].pageX) {
+		pageX = e.originaiEvent.touches[0].pageX;
+	} else {
+		pageX = e.pageX;
+	}
+	
+	return pageX;
+}
 
 
 // コース描画
