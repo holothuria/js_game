@@ -25,8 +25,10 @@ param = new parameters();
 
 // 主人公の生成
 player = new actor();
-player.img.nmlFile.src = "../img/player.png";
-player.img.rvsFile.src = "../img/player_rvs.png";
+player.img.file.src = "../img/player.png";
+player.img.sideDivide = 1;
+player.img.lengthDivide = 2;
+
 
 player.posX = 0;
 player.posY = 0;
@@ -106,13 +108,14 @@ function parameters(){
 // 変更されるキャラクター情報
 function actor(){
 	this.img = {
-		nmlFile : new Image(),
-		rvsFile : new Image(),
+		file : new Image(),
+		sideDivide : 1,
+		lengthDivide : 1,
 		
 		width : 0,
 		height : 0,
 		
-		rvsFlag : true
+		rvsFlag : false
 	}
 
 	this.posX = 0;
@@ -190,8 +193,8 @@ function start(){
 	
 	
 	// 画像サイズ取得
-	player.img.width = player.img.nmlFile.naturalWidth;
-	player.img.height = player.img.nmlFile.naturalHeight;
+	player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
+	player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
 	
 	
 	timerID = setInterval('main()',45);
@@ -211,9 +214,9 @@ function main() {
 
 	// 描画
 	if (!player.img.rvsFlag) {
-		ctx.ple.drawImage(player.img.nmlFile, player.posX, player.posY);
+		ctx.ple.drawImage(player.img.file, 0, 0, player.img.width, player.img.height, player.posX, player.posY, player.img.width, player.img.height);
 	} else {
-		ctx.ple.drawImage(player.img.rvsFile, player.posX, player.posY);
+		ctx.ple.drawImage(player.img.file, 0, player.img.height, player.img.width, player.img.height, player.posX, player.posY, player.img.width, player.img.height);
 		
 	}
 	
@@ -304,11 +307,11 @@ function jumpAction(e, landFlag){
 	
 	if (getPageX(event) < (scWidth / 2)) {
 		player.vectorX = -vecX;
-		player.img.rvsFlag = false;
+		player.img.rvsFlag = true;
 		
 	} else {
 		player.vectorX = vecX;
-		player.img.rvsFlag = true;
+		player.img.rvsFlag = false;
 		
 	}
 	
@@ -474,7 +477,7 @@ function touchJudge(){
 		player.posX = Math.ceil(player.posX / chipWid) * chipWid;
 		if (isTchB) {
 			player.vectorX = 0.1;
-			player.img.rvsFlag = true;
+			player.img.rvsFlag = false;
 			
 		} else {
 			player.vectorX = -0.1;
@@ -493,7 +496,7 @@ function touchJudge(){
 		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
 		if (isTchB) {
 			player.vectorX = -0.1;
-			player.img.rvsFlag = false;
+			player.img.rvsFlag = true;
 			
 		} else {
 			player.vectorX = 0.1;
