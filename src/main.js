@@ -25,7 +25,8 @@ param = new parameters();
 
 // 主人公の生成
 player = new actor();
-player.img.file.src = "../img/player.png";
+player.img.nmlFile.src = "../img/player.png";
+player.img.rvsFile.src = "../img/player_rvs.png";
 
 player.posX = 0;
 player.posY = 0;
@@ -104,7 +105,15 @@ function parameters(){
 
 // 変更されるキャラクター情報
 function actor(){
-	this.img = new imgInfo();
+	this.img = {
+		nmlFile : new Image(),
+		rvsFile : new Image(),
+		
+		width : 0,
+		height : 0,
+		
+		rvsFlag : true
+	}
 
 	this.posX = 0;
 	this.posY = 0;
@@ -117,14 +126,6 @@ function actor(){
 
 }
 
-
-// 画像情報保持
-function imgInfo(){
-	this.file = new Image();
-	this.width = 0;
-	this.height = 0;
-
-}
 
 
 // 地形ブロック
@@ -189,8 +190,8 @@ function start(){
 	
 	
 	// 画像サイズ取得
-	player.img.width = player.img.file.naturalWidth;
-	player.img.height = player.img.file.naturalHeight;
+	player.img.width = player.img.nmlFile.naturalWidth;
+	player.img.height = player.img.nmlFile.naturalHeight;
 	
 	
 	timerID = setInterval('main()',45);
@@ -209,7 +210,12 @@ function main() {
 	ctx.ple.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
 
 	// 描画
-	ctx.ple.drawImage(player.img.file, player.posX, player.posY);
+	if (!player.img.rvsFlag) {
+		ctx.ple.drawImage(player.img.nmlFile, player.posX, player.posY);
+	} else {
+		ctx.ple.drawImage(player.img.rvsFile, player.posX, player.posY);
+		
+	}
 	
 	courseDrow();
 //	ctx.blc.drawImage(blcInf[1].file, 200, 300);
@@ -270,36 +276,43 @@ function clickEvent(event){
 	pStatus.climbFlag = false;
 	
 	if (pStatus.isTouchB === true) {
-		if (getPageX(event) < (scWidth / 2)) {
-			player.vectorX = -param.jumpVecX;
-		} else {
-			player.vectorX = param.jumpVecX;
-		}
-		
-		player.vectorY = param.jumpVecY;
-		
+		jumpAction(event, true);
 		
 	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
-		if (getPageX(event) < (scWidth / 2)) {
-			player.vectorX = -param.jumpVecX;
-		} else {
-			player.vectorX = param.jumpVecX;
-		}
-		
-		player.vectorY = param.jumpVecY;
-		
+		jumpAction(event, true);
 	
 	} else if (1 <= pStatus.remAirJump) {
-		if (getPageX(event) < (scWidth / 2)) {
-			player.vectorX = -param.airJumpVecX;
-		} else {
-			player.vectorX = param.airJumpVecX;
-		}
-		
-		player.vectorY = param.airJumpVecY;
-		
-		pStatus.remAirJump -= 1;
+		jumpAction(event, false);
 	}
+	
+}
+
+
+// ジャンプ
+function jumpAction(e, landFlag){
+	
+	if (landFlag) {
+		vecX = param.jumpVecX;
+		vecY = param.jumpVecY;
+		
+	} else {
+		vecX = param.airJumpVecX;
+		vecY = param.airJumpVecY;
+		pStatus.remAirJump -= 1;
+		
+	}
+	
+	if (getPageX(event) < (scWidth / 2)) {
+		player.vectorX = -vecX;
+		player.img.rvsFlag = false;
+		
+	} else {
+		player.vectorX = vecX;
+		player.img.rvsFlag = true;
+		
+	}
+	
+	player.vectorY = vecY;
 	
 }
 
@@ -444,7 +457,7 @@ function touchJudge(){
 				// 同値は下
 				isTchL = true;
 			} else {
-				isTchB = true
+				isTchB = true;
 			}
 		}
 	}
@@ -461,6 +474,7 @@ function touchJudge(){
 		player.posX = Math.ceil(player.posX / chipWid) * chipWid;
 		if (isTchB) {
 			player.vectorX = 0.1;
+			player.img.rvsFlag = true;
 			
 		} else {
 			player.vectorX = -0.1;
@@ -479,6 +493,7 @@ function touchJudge(){
 		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
 		if (isTchB) {
 			player.vectorX = -0.1;
+			player.img.rvsFlag = false;
 			
 		} else {
 			player.vectorX = 0.1;
