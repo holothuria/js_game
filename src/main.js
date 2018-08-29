@@ -246,18 +246,18 @@ document.addEventListener("mousedown", mousedownEvent);
 document.addEventListener("touchstart", mousedownEvent);
 
 document.addEventListener("mouseup", clickEvent);
-//document.addEventListener("touchend", clickEvent);
+document.addEventListener("touchend", clickEvent);
 
 
 // ’·‰Ÿ‚µˆ—
 function mousedownEvent(event){
 	
 	if ((pStatus.isTouchR === true)) {
-		if ((scWidth / 2) < event.pageX) {
+		if ((scWidth / 2) < getPageX(event)) {
 			pStatus.climbFlag = true;
 		}
 	} else if ((pStatus.isTouchL === true)) {
-		if (event.pageX < (scWidth / 2)) {
+		if (getPageX(event) < (scWidth / 2)) {
 			pStatus.climbFlag = true;
 		}
 	
@@ -270,7 +270,7 @@ function clickEvent(event){
 	pStatus.climbFlag = false;
 	
 	if (pStatus.isTouchB === true) {
-		if (event.pageX < (scWidth / 2)) {
+		if (getPageX(event) < (scWidth / 2)) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -280,7 +280,7 @@ function clickEvent(event){
 		
 		
 	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
-		if (event.pageX < (scWidth / 2)) {
+		if (getPageX(event) < (scWidth / 2)) {
 			player.vectorX = -param.jumpVecX;
 		} else {
 			player.vectorX = param.jumpVecX;
@@ -290,7 +290,7 @@ function clickEvent(event){
 		
 	
 	} else if (1 <= pStatus.remAirJump) {
-		if (event.pageX < (scWidth / 2)) {
+		if (getPageX(event) < (scWidth / 2)) {
 			player.vectorX = -param.airJumpVecX;
 		} else {
 			player.vectorX = param.airJumpVecX;
@@ -308,8 +308,8 @@ function clickEvent(event){
 function getPageX(e){
 	var pageX = 0;
 	
-	if (e.originalEvent.changedTouches[0].pageX) {
-		pageX = e.originaiEvent.touches[0].pageX;
+	if (e.changedTouches) {
+		pageX = e.changedTouches[0].pageX;
 	} else {
 		pageX = e.pageX;
 	}
