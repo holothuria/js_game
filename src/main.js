@@ -4,9 +4,7 @@ scHeight = 416;	// screen高さ
 chipWid = 32;	// 1マスの幅
 chipHei = 32;	// 1マスの高さ
 
-vpWidth = scWidth;	//vp幅
-
-
+vpWidth = scWidth;	// vp幅
 
 
 crsRowNum = -1;	// 読み込んだコースの行数
@@ -26,7 +24,7 @@ param = new parameters();
 // 主人公の生成
 player = new actor();
 player.img.file.src = "../img/player.png";
-player.img.sideDivide = 1;
+player.img.sideDivide = 3;
 player.img.lengthDivide = 2;
 
 
@@ -115,7 +113,6 @@ function actor(){
 		width : 0,
 		height : 0,
 		
-		rvsFlag : false
 	}
 
 	this.posX = 0;
@@ -213,14 +210,9 @@ function main() {
 	ctx.ple.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
 
 	// 描画
-	if (!player.img.rvsFlag) {
-		ctx.ple.drawImage(player.img.file, 0, 0, player.img.width, player.img.height, player.posX, player.posY, player.img.width, player.img.height);
-	} else {
-		ctx.ple.drawImage(player.img.file, 0, player.img.height, player.img.width, player.img.height, player.posX, player.posY, player.img.width, player.img.height);
-		
-	}
-	
+	drowPlayer();
 	courseDrow();
+	
 //	ctx.blc.drawImage(blcInf[1].file, 200, 300);
 
 //	var imageData = ctx.ple.getImageData(0, 0, 300, 400);
@@ -307,11 +299,9 @@ function jumpAction(e, landFlag){
 	
 	if (getPageX(event) < (scWidth / 2)) {
 		player.vectorX = -vecX;
-		player.img.rvsFlag = true;
 		
 	} else {
 		player.vectorX = vecX;
-		player.img.rvsFlag = false;
 		
 	}
 	
@@ -331,6 +321,49 @@ function getPageX(e){
 	}
 	
 	return pageX;
+}
+
+
+
+
+// 主人公描画
+dPlayerCount = 0;	// 主人公アニメーション用
+function drowPlayer(){
+	var dStartX = 0;
+	var dStartY = 0;
+	
+	var animFNum = 4;
+	
+	if (pStatus.isTouchB) {
+		dStartX = player.img.width * (Math.floor(dPlayerCount / animFNum) % player.img.sideDivide);
+		if (dPlayerCount === (animFNum * 3 - 1)){
+			dPlayerCount = animFNum * 4;
+		
+		} else if ((animFNum * 5) <= dPlayerCount) {
+			dPlayerCount = 0;
+			
+		} else {
+			dPlayerCount += 1;
+			
+		}
+		
+	} else {
+		dStartX = 0;
+		
+	}
+	
+	
+	
+	if (0 < player.vectorX) {
+		dStartY = 0;
+		
+	} else {
+		dStartY = player.img.height;
+		
+	}
+	
+		ctx.ple.drawImage(player.img.file, dStartX, dStartY, player.img.width, player.img.height, player.posX, player.posY, player.img.width, player.img.height);
+		
 }
 
 
@@ -477,7 +510,6 @@ function touchJudge(){
 		player.posX = Math.ceil(player.posX / chipWid) * chipWid;
 		if (isTchB) {
 			player.vectorX = 0.1;
-			player.img.rvsFlag = false;
 			
 		} else {
 			player.vectorX = -0.1;
@@ -496,7 +528,6 @@ function touchJudge(){
 		player.posX = Math.floor((player.posX + player.img.width) / chipWid) * chipWid - player.img.width;
 		if (isTchB) {
 			player.vectorX = -0.1;
-			player.img.rvsFlag = true;
 			
 		} else {
 			player.vectorX = 0.1;
