@@ -382,8 +382,6 @@ function courseDrow(){
 		
 		var drwPosY = scHeight - chipHei;
 		
-		var rowData = null;
-		
 		for (var i = 0; i < (scHeight / chipHei); i++){
 			crsRowNum--;
 			drowOneRow(drwPosY, courseData[crsRowNum]);
