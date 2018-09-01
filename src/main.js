@@ -394,18 +394,21 @@ function courseDrow(){
 	} else if (player.posY < (scHeight / 2)) {
 		// ã•ûƒXƒNƒ[ƒ‹
 		var scrY = Math.ceil((scHeight / 2) - player.posY);
+		if (chipHei <= nowRowScr) {
+			if (crsRowNum === 1) {
+				scrY = chipHei - nowRowScr;
+				nowRowScr = chipHei;
+			}
+		}
 		
-		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
+		var imageData = ctx.blc.getImageData(0, 0, scWidth, (scHeight - scrY));
 		ctx.blc.putImageData(imageData, 0, scrY);
 		ctx.blc.clearRect(0, 0, scWidth, scrY);
 		
 		nowRowScr += scrY;
 		if (chipHei <= nowRowScr) {
-			if (crsRowNum === 1) {
-				nowRowScr = chipHei;
-			}
-			drowOneRow((nowRowScr - 32), courseData[crsRowNum - 1]);
-			nowRowScr -= 32;
+			drowOneRow((nowRowScr - chipHei), courseData[crsRowNum - 1]);
+			nowRowScr -= chipHei;
 			crsRowNum--;
 			
 		}
