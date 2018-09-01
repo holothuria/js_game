@@ -461,7 +461,6 @@ function touchJudge(){
 	
 	if ((scHeight - player.img.height) <= player.posY) {
 		isTchB = true;
-		player.posY -= nowRowScr;
 		
 	}
 	
@@ -542,7 +541,7 @@ function touchJudge(){
 	
 	if (isTchT) {
 		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
-		player.posY -= nowRowScr;
+		player.posY += nowRowScr;
 		player.vectorY = 0;
 		
 	}
@@ -586,7 +585,11 @@ function touchJudge(){
 	
 	if (isTchB) {
 		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
-		player.posY += nowRowScr;
+		if (!((scHeight - player.img.height) <= player.posY)) {
+			player.posY += nowRowScr;
+			
+		}
+		
 		player.vectorY = 0;
 		pStatus.remAirJump = 1;
 		
