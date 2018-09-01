@@ -394,12 +394,18 @@ function courseDrow(){
 	} else if (player.posY < (scHeight / 2)) {
 		// ã•ûƒXƒNƒ[ƒ‹
 		var scrY = Math.ceil((scHeight / 2) - player.posY);
-		nowRowScr += scrY;
-		if (chipHei <= nowRowScr) {
+		if (chipHei <= (nowRowScr + scrY)) {
 			if (crsRowNum === 1) {
 				scrY = chipHei - nowRowScr;
 				nowRowScr = chipHei;
+				
+			} else {
+				nowRowScr += scrY;
+				
 			}
+		} else {
+			nowRowScr += scrY;
+			
 		}
 		
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, (scHeight - scrY));
