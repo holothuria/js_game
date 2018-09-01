@@ -400,7 +400,10 @@ function courseDrow(){
 		ctx.blc.clearRect(0, 0, scWidth, scrY);
 		
 		nowRowScr += scrY;
-		if (32 < nowRowScr) {
+		if (chipHei <= nowRowScr) {
+			if (crsRowNum === 1) {
+				nowRowScr = chipHei;
+			}
 			drowOneRow((nowRowScr - 32), courseData[crsRowNum - 1]);
 			nowRowScr -= 32;
 			crsRowNum--;
@@ -458,6 +461,8 @@ function touchJudge(){
 	
 	if ((scHeight - player.img.height) <= player.posY) {
 		isTchB = true;
+		player.posY -= nowRowScr;
+		
 	}
 	
 	// ƒuƒƒbƒN”»’è
@@ -537,7 +542,7 @@ function touchJudge(){
 	
 	if (isTchT) {
 		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
-		player.posY += nowRowScr;
+		player.posY -= nowRowScr;
 		player.vectorY = 0;
 		
 	}
