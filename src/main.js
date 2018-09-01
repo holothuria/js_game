@@ -537,6 +537,7 @@ function touchJudge(){
 	
 	if (isTchT) {
 		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
+		player.posY += nowRowScr;
 		player.vectorY = 0;
 		
 	}
@@ -580,6 +581,7 @@ function touchJudge(){
 	
 	if (isTchB) {
 		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
+		player.posY += nowRowScr;
 		player.vectorY = 0;
 		pStatus.remAirJump = 1;
 		
@@ -606,7 +608,7 @@ function isInWall(posX, posY){
 	
 	posX /= chipWid;
 	
-	posY += nowRowScr;
+	posY -= nowRowScr;
 	posY /= chipHei;
 	
 	posY += crsRowNum;
