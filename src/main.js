@@ -401,7 +401,7 @@ function courseDrow(){
 		
 		nowRowScr += scrY;
 		if (32 < nowRowScr) {
-			drowOneRow((nowRowScr - 32), courseData[crsRowNum]);
+			drowOneRow((nowRowScr - 32), courseData[crsRowNum - 1]);
 			nowRowScr -= 32;
 			crsRowNum--;
 			
