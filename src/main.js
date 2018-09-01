@@ -419,7 +419,7 @@ function courseDrow(){
 			
 		}
 		
-		drowOneRow((nowRowScr - 32), courseData[crsRowNum - 1]);
+		drowOneRow((nowRowScr - chipHei), courseData[crsRowNum - 1]);
 		
 		player.posY += scrY;
 		
@@ -447,7 +447,7 @@ function drowOneRow(drwPosY, rowData){
 
 // ê⁄êGîªíË
 function touchJudge(){
-	var isWall = new Array(8);
+	var isWall = new Array(4);
 	
 	var biggerPosX = Math.floor(player.posX) + player.img.width;
 	var biggerPosY = Math.floor(player.posY) + player.img.height;
