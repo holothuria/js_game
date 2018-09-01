@@ -28,8 +28,8 @@ player.img.sideDivide = 3;
 player.img.lengthDivide = 2;
 
 
-player.posX = 0;
-player.posY = 0;
+player.posX = scWidth / 2;
+player.posY = scHeight - chipHei;
 player.vectorX = param.maxRunSpd;
 player.vectorY = param.maxRunSpd;
 
@@ -45,7 +45,13 @@ blcInf = [
 
 // コースデータ作成
 courseData = [
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -212,22 +218,6 @@ function main() {
 	// 描画
 	drowPlayer();
 	courseDrow();
-	
-//	ctx.blc.drawImage(blcInf[1].file, 200, 300);
-
-//	var imageData = ctx.ple.getImageData(0, 0, 300, 400);
-
-
-
-//	ctx.blc.putImageData(imageData, 0, 0);
-
-//	ctx.blc.beginPath();
-//	ctx.blc.moveTo(0, 0);
-//	ctx.blc.lineTo(player.posX + 8 , player.posY + 8);
-//	ctx.blc.stroke();
-
-
-
 
 	// 移動前座標の保存
 	player.posBfrX = player.posX;
@@ -332,7 +322,7 @@ function drowPlayer(){
 	var dStartX = 0;
 	var dStartY = 0;
 	
-	var animFNum = 4;
+	const animFNum = 4;
 	
 	if (pStatus.isTouchB) {
 		dStartX = player.img.width * (Math.floor(dPlayerCount / animFNum) % player.img.sideDivide);
@@ -371,26 +361,44 @@ function drowPlayer(){
 function courseDrow(){
 	if (crsRowNum === 0) {
 		return;
+	} else if (crsRowNum === -1 ) {
+		crsRowNum = courseData.length;
+		
+		var drwPosY = scHeight - chipHei;
+		
+		var rowData = null;
+		
+		for (var i = 0; i < (scHeight / chipHei); i++){
+			crsRowNum--;
+			drowOneRow(drwPosY, courseData[crsRowNum]);
+			drwPosY -= chipHei;
+	
+		}
+		
+	} else if (player.posY < (scWidth / 2)) {
+		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
+		ctx.blc.putImageData(imageData, 0, chipHeight);
+		ctx.blc.clearRect(0, 0, scWidth, chipHeight);
+		
+		crsRowNum--;
+		drowOneRow(0, courseData[crsRowNum]);
+		
+		player.posY -= chipHei;
 	}
 	
-	crsRowNum = 0;
-	
+}
+
+// 1列描画
+function drowOneRow(drwPosY, rowData){
 	var drwPosX = 0;
-	var drwPosY = 0;
 	
-	courseData.forEach(function(rowData){
-		rowData.forEach(function(chipData){
-			if (chipData !== 0) {
-				ctx.blc.drawImage(blcInf[chipData].file, drwPosX, drwPosY);
-				
-			}
+	rowData.forEach(function(chipData){
+		if (chipData !== 0) {
+			ctx.blc.drawImage(blcInf[chipData].file, drwPosX, drwPosY);
 			
-			drwPosX += chipWid;
-			
-		});
+		}
 		
-		drwPosX = 0;
-		drwPosY += chipHei;
+		drwPosX += chipWid;
 		
 	});
 	
@@ -571,6 +579,8 @@ function isInWall(posX, posY){
 	
 	posX /= chipWid;
 	posY /= chipHei;
+	
+	posY += crsRowNum;
 	
 	return courseData[Math.floor(posY)][Math.floor(posX)] !== 0;
 
