@@ -543,7 +543,7 @@ function touchJudge(){
 	
 	
 	if (isTchT) {
-		player.posY = Math.ceil(player.posY / chipWid) * chipWid;
+		player.posY = Math.ceil((player.posY - nowRowScr) / chipWid) * chipWid;
 		player.posY += nowRowScr;
 		player.vectorY = 0;
 		
