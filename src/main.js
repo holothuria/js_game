@@ -393,7 +393,7 @@ function courseDrow(){
 		
 	} else if (player.posY < (scHeight / 2)) {
 		// ã•ûƒXƒNƒ[ƒ‹
-		var scrY = (scHeight / 2) - player.posY;
+		var scrY = Math.ceil((scHeight / 2) - player.posY);
 		
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
 		ctx.blc.putImageData(imageData, 0, scrY);
