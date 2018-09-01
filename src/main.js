@@ -1,10 +1,10 @@
 
-scWidth = 320;	// screen幅
-scHeight = 416;	// screen高さ
-chipWid = 32;	// 1マスの幅
-chipHei = 32;	// 1マスの高さ
+const scWidth = 320;	// screen幅
+const scHeight = 416;	// screen高さ
+const chipWid = 32;	// 1マスの幅
+const chipHei = 32;	// 1マスの高さ
 
-vpWidth = scWidth;	// vp幅
+const vpWidth = scWidth;	// vp幅
 
 
 crsRowNum = -1;	// 読み込んだコースの行数
@@ -214,10 +214,11 @@ function main() {
 
 	// キャラがいた場所の描画リセット
 	ctx.ple.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
-
+	
 	// 描画
-	drowPlayer();
 	courseDrow();
+	drowPlayer();
+	
 
 	// 移動前座標の保存
 	player.posBfrX = player.posX;
@@ -361,7 +362,9 @@ function drowPlayer(){
 function courseDrow(){
 	if (crsRowNum === 0) {
 		return;
+		
 	} else if (crsRowNum === -1 ) {
+		// コースの初期化
 		crsRowNum = courseData.length;
 		
 		var drwPosY = scHeight - chipHei;
@@ -372,10 +375,11 @@ function courseDrow(){
 			crsRowNum--;
 			drowOneRow(drwPosY, courseData[crsRowNum]);
 			drwPosY -= chipHei;
-	
+			
 		}
 		
 	} else if (player.posY < (scWidth / 2)) {
+		// 上方スクロール
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
 		ctx.blc.putImageData(imageData, 0, chipHei);
 		ctx.blc.clearRect(0, 0, scWidth, chipHei);
@@ -383,7 +387,10 @@ function courseDrow(){
 		crsRowNum--;
 		drowOneRow(0, courseData[crsRowNum]);
 		
-		player.posY -= chipHei;
+		ctx.ple.clearRect(player.posX, player.posY, player.img.width, player.img.height);
+		
+		player.posY += chipHei;
+		
 	}
 	
 }
