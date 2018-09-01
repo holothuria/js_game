@@ -405,7 +405,7 @@ function courseDrow(){
 			
 		}
 		
-		drowOneRow((nowRowScr - 32), courseData[crsRowNum]);
+		drowOneRow((nowRowScr - 32), courseData[crsRowNum - 1]);
 		
 		player.posY += scrY;
 		
@@ -603,6 +603,8 @@ function isInWall(posX, posY){
 	}
 	
 	posX /= chipWid;
+	
+	posY -= nowRowScr;
 	posY /= chipHei;
 	
 	posY += crsRowNum;
