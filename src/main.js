@@ -46,6 +46,18 @@ blcInf = [
 // コースデータ作成
 courseData = [
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
@@ -359,6 +371,7 @@ function drowPlayer(){
 
 
 // コース描画
+let nowRowScr = 0;
 function courseDrow(){
 	if (crsRowNum === 0) {
 		return;
@@ -380,16 +393,22 @@ function courseDrow(){
 		
 	} else if (player.posY < (scWidth / 2)) {
 		// 上方スクロール
+		const scrY = 10;
+		
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
-		ctx.blc.putImageData(imageData, 0, chipHei);
-		ctx.blc.clearRect(0, 0, scWidth, chipHei);
+		ctx.blc.putImageData(imageData, 0, scrY);
+		ctx.blc.clearRect(0, 0, scWidth, scrY);
 		
-		crsRowNum--;
-		drowOneRow(0, courseData[crsRowNum]);
+		if (32 < nowRowScr) {
+			drowOneRow((nowRowScr - 32), courseData[crsRowNum]);
+			nowRowScr -= 32;
+			crsRowNum--;
+			
+		}
 		
-		ctx.ple.clearRect(player.posX, player.posY, player.img.width, player.img.height);
+		drowOneRow((nowRowScr - 32), courseData[crsRowNum]);
 		
-		player.posY += chipHei;
+		player.posY += scrY;
 		
 	}
 	
