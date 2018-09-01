@@ -375,7 +375,7 @@ function drowPlayer(){
 
 // ÉRÅ[ÉXï`âÊ
 function courseDrow(){
-	if (crsRowNum <= 0) {
+	if (crsRowNum === 0) {
 		return;
 		
 	} else if (crsRowNum === -1 ) {
