@@ -393,12 +393,13 @@ function courseDrow(){
 		
 	} else if (player.posY < (scWidth / 2)) {
 		// ã•ûƒXƒNƒ[ƒ‹
-		const scrY = 10;
+		const scrY = 5;
 		
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
 		ctx.blc.putImageData(imageData, 0, scrY);
 		ctx.blc.clearRect(0, 0, scWidth, scrY);
 		
+		nowRowScr += scrY;
 		if (32 < nowRowScr) {
 			drowOneRow((nowRowScr - 32), courseData[crsRowNum]);
 			nowRowScr -= 32;
