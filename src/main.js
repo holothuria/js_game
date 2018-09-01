@@ -9,6 +9,9 @@ const vpWidth = scWidth;	// vp幅
 
 crsRowNum = -1;	// 読み込んだコースの行数
 
+let nowRowScr = 0;	// スクロール現在の行端数
+
+
 canvas1  = null;   // レイヤー1
 canvas2  = null;   // レイヤー2
 
@@ -371,7 +374,6 @@ function drowPlayer(){
 
 
 // コース描画
-let nowRowScr = 0;
 function courseDrow(){
 	if (crsRowNum === 0) {
 		return;
@@ -391,7 +393,7 @@ function courseDrow(){
 		
 	} else if (player.posY < (scWidth / 2)) {
 		// 上方スクロール
-		const scrY = 5;
+		const scrY = player.posY - (scWidth / 2);
 		
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
 		ctx.blc.putImageData(imageData, 0, scrY);
