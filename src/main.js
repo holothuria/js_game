@@ -377,8 +377,8 @@ function courseDrow(){
 		
 	} else if (player.posY < (scWidth / 2)) {
 		var imageData = ctx.blc.getImageData(0, 0, scWidth, scHeight);
-		ctx.blc.putImageData(imageData, 0, chipHeight);
-		ctx.blc.clearRect(0, 0, scWidth, chipHeight);
+		ctx.blc.putImageData(imageData, 0, chipHei);
+		ctx.blc.clearRect(0, 0, scWidth, chipHei);
 		
 		crsRowNum--;
 		drowOneRow(0, courseData[crsRowNum]);
