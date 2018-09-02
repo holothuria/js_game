@@ -300,6 +300,7 @@ function jumpAction(e, landFlag){
 		vecX = param.airJumpVecX;
 		vecY = param.airJumpVecY;
 		pStatus.remAirJump -= 1;
+		ctx.ple.globalAlpha = 0.7;
 		
 	}
 	
@@ -335,8 +336,8 @@ function getPageX(e){
 // 主人公描画
 dPlayerCount = 0;	// 主人公アニメーション用
 function drowPlayer(){
-	var dStartX = 0;
-	var dStartY = 0;
+	let dStartX = 0;
+	let dStartY = 0;
 	
 	const animFNum = 4;
 	
@@ -602,6 +603,7 @@ function touchJudge(){
 		
 		player.vectorY = 0;
 		pStatus.remAirJump = 1;
+		ctx.ple.globalAlpha = 1.0;
 		
 	}
 	
