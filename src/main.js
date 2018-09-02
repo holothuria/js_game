@@ -358,8 +358,6 @@ function drowPlayer(){
 		
 	}
 	
-	
-	
 	if (0 < player.vectorX) {
 		dStartY = 0;
 		
@@ -447,10 +445,11 @@ function drowOneRow(drwPosY, rowData){
 
 // 接触判定
 function touchJudge(){
-	var isWall = new Array(4);
+	let isWall = new Array(4);
 	
-	var biggerPosX = Math.floor(player.posX) + player.img.width;
-	var biggerPosY = Math.floor(player.posY) + player.img.height;
+	let shiftPosY = player.posY - nowRowScr;
+	let biggerPosX = Math.floor(player.posX) + player.img.width;
+	let biggerPosY = Math.floor(shiftPosY) + player.img.height;
 	
 	isTchT = false;
 	isTchL = false;
@@ -474,8 +473,8 @@ function touchJudge(){
 	}
 	
 	// ブロック判定
-	isWall[0] = isInWall(player.posX, player.posY);
-	isWall[1] = isInWall(biggerPosX, player.posY);
+	isWall[0] = isInWall(player.posX, shiftPosY);
+	isWall[1] = isInWall(biggerPosX, shiftPosY);
 	isWall[2] = isInWall(biggerPosX, biggerPosY);
 	isWall[3] = isInWall(player.posX, biggerPosY);
 	
@@ -494,7 +493,7 @@ function touchJudge(){
 	
 	if (!(isTchT || isTchL) && isWall[0]) {
 		var diffX = chipWid - (player.posX % chipWid);
-		var diffY = chipHei - (player.posY % chipHei);
+		var diffY = chipHei - (shiftPosY % chipHei);
 		if (diffX <= diffY) {
 			// 同値は左
 			isTchL = true;
@@ -505,7 +504,7 @@ function touchJudge(){
 	
 	if (!(isTchT || isTchR) && isWall[1]) {
 		var diffX = biggerPosX % chipWid;
-		var diffY = chipHei - (player.posY % chipHei);
+		var diffY = chipHei - (shiftPosY % chipHei);
 		if (diffX <= diffY) {
 			// 同値は右
 			isTchR = true;
@@ -547,9 +546,8 @@ function touchJudge(){
 	}
 	
 	
-	
 	if (isTchT) {
-		player.posY = Math.ceil((player.posY - nowRowScr) / chipWid) * chipWid;
+		player.posY = Math.ceil((shiftPosY - nowRowScr) / chipWid) * chipWid;
 		player.posY += nowRowScr;
 		player.vectorY = 0;
 		
@@ -593,7 +591,7 @@ function touchJudge(){
 	}
 	
 	if (isTchB) {
-		player.posY = Math.floor((player.posY + player.img.height) / chipHei) * chipHei - player.img.height;
+		player.posY = Math.floor((shiftPosY + player.img.height) / chipHei) * chipHei - player.img.height;
 		if (!((scHeight - player.img.height) <= player.posY)) {
 			player.posY += nowRowScr;
 			
@@ -624,8 +622,6 @@ function isInWall(posX, posY){
 	}
 	
 	posX /= chipWid;
-	
-	posY -= nowRowScr;
 	posY /= chipHei;
 	
 	posY += crsRowNum;
