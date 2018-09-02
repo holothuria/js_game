@@ -591,12 +591,11 @@ function touchJudge(){
 	}
 	
 	if (isTchB) {
-		player.posY = Math.floor((shiftPosY + player.img.height) / chipHei) * chipHei - player.img.height;
 		if ((scHeight - player.img.height) <= player.posY) {
 			player.posY = scHeight - player.img.height;
 			
 		} else {
-			
+			player.posY = Math.floor((shiftPosY + player.img.height) / chipHei) * chipHei - player.img.height;
 			player.posY += nowRowScr;
 			
 		}
