@@ -374,7 +374,7 @@ function drowPlayer(){
 		
 	}
 	
-	if (pStatus.isTouchL || pStatus.isTouchR) {
+	if (!pStatus.isTouchB && (pStatus.isTouchL || pStatus.isTouchR)) {
 		dStartY = player.img.height * 2;
 		
 	} else if (0 < player.vectorX) {
@@ -723,6 +723,8 @@ function stop(){
 
 // ゴール  ID：0
 function goalEvent(){
+	let tenMillSecond = recodeTenMillSecond;
+	
 	stop();
 	
 	ctx.str.font = "30px 'ＭＳ ゴシック'";
@@ -731,13 +733,18 @@ function goalEvent(){
 	second = Math.floor(recodeTenMillSecond / 100);
 	minute = Math.floor(second / 60);
 	second %= 60;
+	tenMillSecond %= 100;
 	
 	if (second < 10) {
 		second = "0" + second;
 	}
 	
+	if (tenMillSecond < 10) {
+		tenMillSecond = "0" + tenMillSecond;
+	}
+	
 	ctx.str.clearRect(5 ,0 , 150, 30);
-	ctx.str.fillText(( minute + "'" + second + "\"" + (recodeTenMillSecond % 100)), scWidth * 0.3, (scHeight * 0.5 + 35));
+	ctx.str.fillText(( minute + "'" + second + "\"" + tenMillSecond), scWidth * 0.3, (scHeight * 0.5 + 35));
 	
 }
 
