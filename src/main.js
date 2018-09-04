@@ -77,9 +77,9 @@ courseData = [
 	[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+	[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+	[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 	[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -643,7 +643,14 @@ function isInWall(posX, posY){
 	
 	posY += crsRowNum;
 	
-	nowSection = courseData[Math.floor(posY)][Math.floor(posX)];
+	posX = Math.floor(posX);
+	posY = Math.floor(posY);
+	
+	if (posX < 0 || posY < 0) {
+		return false;
+	}
+	
+	nowSection = courseData[posY][posX];
 	
 	if (blcInf[nowSection].gameEventId !== -1) {
 		gameEve[blcInf[nowSection].gameEventId]();
