@@ -1,35 +1,36 @@
 
-const scWidth = 320;	// screen•
-const scHeight = 416;	// screen‚‚³
-const chipWid = 32;	// 1ƒ}ƒX‚Ì•
-const chipHei = 32;	// 1ƒ}ƒX‚Ì‚‚³
+const scWidth = 320;	// screenå¹…
+const scHeight = 416;	// screené«˜ã•
+const chipWid = 32;	// 1ãƒã‚¹ã®å¹…
+const chipHei = 32;	// 1ãƒã‚¹ã®é«˜ã•
 
-const vpWidth = scWidth;	// vp•
+const vpWidth = scWidth;	// vpå¹…
+
+let crsRowNum = -1;	// èª­ã¿è¾¼ã‚“ã ã‚³ãƒ¼ã‚¹ã®è¡Œæ•°
+
+let nowRowScr = 0;	// ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ç¾åœ¨ã®è¡Œç«¯æ•°
+
+canvas1 = null;	// ãƒ¬ã‚¤ãƒ¤ãƒ¼
+canvas2 = null;
+canvas3 = null;
+
+mainTimer = -1;		// mainå‡¦ç†ç”¨ã‚¿ã‚¤ãƒãƒ¼
+recodeTimer = -1;	// è¨˜éŒ²ç”¨ã‚¿ã‚¤ãƒãƒ¼
+
+recodeTenMillSecond = 0;	// çµŒéæ™‚é–“(1/100ç§’)
+timeAlterCount = 0;			// çµŒéæ™‚é–“æ›´æ–°ã‚«ã‚¦ãƒ³ãƒˆ
 
 
-crsRowNum = -1;	// “Ç‚İ‚ñ‚¾ƒR[ƒX‚Ìs”
-
-let nowRowScr = 0;	// ƒXƒNƒ[ƒ‹Œ»İ‚Ìs’[”
-
-
-canvas1  = null;   // ƒŒƒCƒ„[1
-canvas2  = null;   // ƒŒƒCƒ„[2
-
-
-timerID = -1;   // ƒ^ƒCƒ}[
-
-
-// ƒIƒuƒWƒFƒNƒg‚Ì’è‹`
+// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å®šç¾©
 ctx = new ctxMng();
 pStatus = new playerStatus();
 param = new parameters();
 
-// ålŒö‚Ì¶¬
+// ä¸»äººå…¬ã®ç”Ÿæˆ
 player = new actor();
 player.img.file.src = "../img/player.png";
 player.img.sideDivide = 3;
 player.img.lengthDivide = 2;
-
 
 player.posX = scWidth / 2;
 player.posY = scHeight - chipHei;
@@ -39,17 +40,26 @@ player.vectorY = param.maxRunSpd;
 
 
 
-// ’nŒ`”z’u•¨ƒIƒuƒWƒFƒNƒg‚Ì¶¬
+// åœ°å½¢é…ç½®ç‰©ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆ
 blcInf = [
-	new terrainBlock(""),
-	new terrainBlock("../img/block.png")
+	new terrainBlock("", -1),
+	new terrainBlock("../img/block.png", -1),
+	new terrainBlock("", 0)
+];
+
+// ã‚²ãƒ¼ãƒ ã‚¤ãƒ™ãƒ³ãƒˆé…åˆ—ã®ç”Ÿæˆ
+gameEve = [
+	function(){
+		goalEvent();
+	}
+	
 ];
 
 
-// ƒR[ƒXƒf[ƒ^ì¬
+// ã‚³ãƒ¼ã‚¹ãƒ‡ãƒ¼ã‚¿ä½œæˆ
 courseData = [
 	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+	[2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -85,15 +95,16 @@ courseData = [
 
 
 
-// ƒRƒ“ƒeƒLƒXƒgŠÇ—
+// ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆç®¡ç†
 function ctxMng(){
-	this.blc = null;	// ’nŒ`”z’u•¨
-	this.ple = null;	// ålŒö
+	this.blc = null;	// åœ°å½¢é…ç½®ç‰©
+	this.ple = null;	// ä¸»äººå…¬
+	this.str = null;	// ã‚¿ã‚¤ãƒãƒ¼è¡¨ç¤º
 	
 }
 
 
-// ƒvƒŒƒCƒ„[ó‘Ô
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼çŠ¶æ…‹
 function playerStatus(){
 	this.remAirJump = 0;
 	this.climbFlag = false;
@@ -107,9 +118,8 @@ function playerStatus(){
 }
 
 
-// •ÏX‚³‚ê‚È‚¢ƒpƒ‰ƒ[ƒ^
+// å¤‰æ›´ã•ã‚Œãªã„ã‚­ãƒ£ãƒ©ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 function parameters(){
-
 	this.maxRunSpd = 5;
 	this.runAccel = 0.3;
 	
@@ -124,7 +134,7 @@ function parameters(){
 	
 }
 
-// •ÏX‚³‚ê‚éƒLƒƒƒ‰ƒNƒ^[î•ñ
+// å¤‰æ›´ã•ã‚Œã‚‹ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼æƒ…å ±
 function actor(){
 	this.img = {
 		file : new Image(),
@@ -149,25 +159,24 @@ function actor(){
 
 
 
-// ’nŒ`ƒuƒƒbƒN
-function terrainBlock(filePath){
+// åœ°å½¢ãƒ–ãƒ­ãƒƒã‚¯
+function terrainBlock(filePath, gameEventId){
 	this.file = new Image();
 	this.file.src = filePath;
+	this.gameEventId = gameEventId;
 
 	
 }
 
 
 
-
-
-// d—Í
+// é‡åŠ›
 function gravity(){
 	player.vectorY += 0.8;
 	
 }
 
-// ’ïR
+// ç©ºæ°—æŠµæŠ—
 function airResist(){
 	if ((pStatus.isTouchB === false) && (pStatus.isTouchL === false) && (pStatus.isTouchR === false)) {
 		if (0.1 < player.vectorX) {
@@ -181,7 +190,7 @@ function airResist(){
 	
 }
 
-// ‘–s
+// èµ°è¡Œ
 function running(){
 	if (pStatus.isTouchB === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
@@ -200,63 +209,66 @@ function running(){
 
 
 
-// ŠJnˆ—
+// é–‹å§‹å‡¦ç†
 function start(){
 	
-	canvas1 = document.getElementById("layer1");   // ƒLƒƒƒ“ƒoƒX—v‘f‚Ìæ“¾
-	ctx.blc = canvas1.getContext("2d");   // ƒLƒƒƒ“ƒoƒX‚©‚çƒRƒ“ƒeƒLƒXƒg‚ğæ“¾
-	
+	// ã‚­ãƒ£ãƒ³ãƒã‚¹å–å¾—
+	canvas1 = document.getElementById("layer1");
 	canvas2 = document.getElementById("layer2");
+	canvas3 = document.getElementById("layer3");
+	ctx.blc = canvas1.getContext("2d");
 	ctx.ple = canvas2.getContext("2d");
+	ctx.str = canvas3.getContext("2d");
 	
-	
-	// ‰æ‘œƒTƒCƒYæ“¾
+	// ç”»åƒã‚µã‚¤ã‚ºå–å¾—
 	player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
 	player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
 	
+	// å‡¦ç†ã‚»ãƒƒãƒ†ã‚£ãƒ³ã‚°
+	document.addEventListener("mousedown", mousedownEvent);
+	document.addEventListener("touchstart", mousedownEvent);
+	document.addEventListener("mouseup", clickEvent);
+	document.addEventListener("touchend", clickEvent);
 	
-	timerID = setInterval('main()',45);
+	mainTimer = setInterval("main()",45);
+	recodeTimer = setInterval("timeCount()", 10);
+	
 }
 
 
 
-// ƒƒCƒ“ˆ—
+
+// ãƒ¡ã‚¤ãƒ³å‡¦ç†
 function main() {
 
 	gravity();
 	airResist();
 	running();
 
-	// ƒLƒƒƒ‰‚ª‚¢‚½êŠ‚Ì•`‰æƒŠƒZƒbƒg
+	// ã‚­ãƒ£ãƒ©ãŒã„ãŸå ´æ‰€ã®æç”»ãƒªã‚»ãƒƒãƒˆ
 	ctx.ple.clearRect(player.posBfrX, player.posBfrY, player.img.width, player.img.height);
 	
-	// •`‰æ
+	// æç”»
 	courseDrow();
 	drowPlayer();
 	
 
-	// ˆÚ“®‘OÀ•W‚Ì•Û‘¶
+	// ç§»å‹•å‰åº§æ¨™ã®ä¿å­˜
 	player.posBfrX = player.posX;
 	player.posBfrY = player.posY;
 
-	// À•WˆÚ“®
+	// åº§æ¨™ç§»å‹•
 	player.posX += player.vectorX;
 	player.posY += player.vectorY;
 
 	touchJudge();
 
-
 }
 
 
-document.addEventListener("mousedown", mousedownEvent);
-document.addEventListener("touchstart", mousedownEvent);
-
-document.addEventListener("mouseup", clickEvent);
-document.addEventListener("touchend", clickEvent);
 
 
-// ’·‰Ÿ‚µˆ—
+// é•·æŠ¼ã—æ™‚å‡¦ç†
 function mousedownEvent(event){
 	
 	if ((pStatus.isTouchR === true)) {
@@ -272,7 +284,7 @@ function mousedownEvent(event){
 }
 
 
-// ƒNƒŠƒbƒNˆ—
+// ã‚¯ãƒªãƒƒã‚¯æ™‚å‡¦ç†
 function clickEvent(event){
 	pStatus.climbFlag = false;
 	
@@ -289,7 +301,7 @@ function clickEvent(event){
 }
 
 
-// ƒWƒƒƒ“ƒv
+// ã‚¸ãƒ£ãƒ³ãƒ—
 function jumpAction(e, landFlag){
 	
 	if (landFlag) {
@@ -317,7 +329,7 @@ function jumpAction(e, landFlag){
 }
 
 
-// ƒNƒŠƒbƒNEƒ^ƒbƒ` XÀ•W æ“¾
+// ã‚¯ãƒªãƒƒã‚¯ãƒ»ã‚¿ãƒƒãƒ Xåº§æ¨™ å–å¾—
 function getPageX(e){
 	var pageX = 0;
 	
@@ -333,8 +345,8 @@ function getPageX(e){
 
 
 
-// ålŒö•`‰æ
-dPlayerCount = 0;	// ålŒöƒAƒjƒ[ƒVƒ‡ƒ“—p
+// ä¸»äººå…¬æç”»
+dPlayerCount = 0;	// ä¸»äººå…¬ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨
 function drowPlayer(){
 	let dStartX = 0;
 	let dStartY = 0;
@@ -372,13 +384,13 @@ function drowPlayer(){
 }
 
 
-// ƒR[ƒX•`‰æ
+// ã‚³ãƒ¼ã‚¹æç”»
 function courseDrow(){
 	if (crsRowNum === 0) {
 		return;
 		
 	} else if (crsRowNum === -1 ) {
-		// ƒR[ƒX‚Ì‰Šú‰»
+		// ã‚³ãƒ¼ã‚¹ã®åˆæœŸåŒ–
 		crsRowNum = courseData.length;
 		
 		var drwPosY = scHeight - chipHei;
@@ -391,7 +403,7 @@ function courseDrow(){
 		}
 		
 	} else if (player.posY < (scHeight / 2)) {
-		// ã•ûƒXƒNƒ[ƒ‹
+		// ä¸Šæ–¹ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«
 		var scrY = Math.ceil((scHeight / 2) - player.posY);
 		if (chipHei <= (nowRowScr + scrY)) {
 			if (crsRowNum === 1) {
@@ -426,7 +438,7 @@ function courseDrow(){
 	
 }
 
-// 1—ñ•`‰æ
+// 1åˆ—æç”»
 function drowOneRow(drwPosY, rowData){
 	var drwPosX = 0;
 	
@@ -444,7 +456,7 @@ function drowOneRow(drwPosY, rowData){
 
 
 
-// ÚG”»’è
+// æ¥è§¦åˆ¤å®š
 function touchJudge(){
 	let isWall = new Array(4);
 	
@@ -457,7 +469,7 @@ function touchJudge(){
 	isTchR = false;
 	isTchB = false;
 	
-	// ‰æ–Ê’[‚Ì”»’è
+	// ç”»é¢ç«¯ã®åˆ¤å®š
 	if (player.posX <= 0) {
 		isTchL = true;
 	}
@@ -473,7 +485,7 @@ function touchJudge(){
 		
 	}
 	
-	// ƒuƒƒbƒN”»’è
+	// ãƒ–ãƒ­ãƒƒã‚¯åˆ¤å®š
 	isWall[0] = isInWall(player.posX, shiftPosY);
 	isWall[1] = isInWall(biggerPosX, shiftPosY);
 	isWall[2] = isInWall(biggerPosX, biggerPosY);
@@ -496,7 +508,7 @@ function touchJudge(){
 		var diffX = chipWid - (player.posX % chipWid);
 		var diffY = chipHei - (shiftPosY % chipHei);
 		if (diffX <= diffY) {
-			// “¯’l‚Í¶
+			// åŒå€¤ã¯å·¦
 			isTchL = true;
 		} else {
 			isTchT = true;
@@ -507,7 +519,7 @@ function touchJudge(){
 		var diffX = biggerPosX % chipWid;
 		var diffY = chipHei - (shiftPosY % chipHei);
 		if (diffX <= diffY) {
-			// “¯’l‚Í‰E
+			// åŒå€¤ã¯å³
 			isTchR = true;
 		} else {
 			isTchT = true;
@@ -522,7 +534,7 @@ function touchJudge(){
 			var diffX = biggerPosX % chipWid;
 			var diffY = biggerPosY % chipHei;
 			if (diffX < diffY) {
-				// “¯’l‚Í‰º
+				// åŒå€¤ã¯ä¸‹
 				isTchR = true;
 			} else {
 				isTchB = true
@@ -538,7 +550,7 @@ function touchJudge(){
 			var diffX = chipWid - (player.posX % chipWid);
 			var diffY = biggerPosY % chipHei;
 			if (diffX < diffY) {
-				// “¯’l‚Í‰º
+				// åŒå€¤ã¯ä¸‹
 				isTchL = true;
 			} else {
 				isTchB = true;
@@ -616,7 +628,7 @@ function touchJudge(){
 	
 }
 
-// À•W‚ª•Ç‚Ì’†‚©”»’è
+// åº§æ¨™ãŒå£ã®ä¸­ã‹åˆ¤å®š
 function isInWall(posX, posY){
 	if (scWidth <= posX){
 		posX = scWidth - 1;
@@ -631,19 +643,94 @@ function isInWall(posX, posY){
 	
 	posY += crsRowNum;
 	
-	return courseData[Math.floor(posY)][Math.floor(posX)] !== 0;
+	nowSection = courseData[Math.floor(posY)][Math.floor(posX)];
+	
+	if (blcInf[nowSection].gameEventId !== -1) {
+		gameEve[blcInf[nowSection].gameEventId]();
+	}
+	
+	return nowSection !== 0;
 
 }
 
 
 
 
-// I—¹ˆ—
-function stop()
-{
-	clearInterval(timerID);
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	timerID = -1;
-
+// æ™‚é–“è¨˜éŒ²
+let second = 0;
+let minute = 0;
+function timeCount(){
+	recodeTenMillSecond++;
+	timeAlterCount++;
+	
+	if (25 < timeAlterCount) {
+		second = Math.floor(recodeTenMillSecond / 100);
+		minute = Math.floor(second / 60);
+		second %= 60;
+		
+		
+		if (second < 10) {
+			second = "0" + second;
+		}
+		
+		ctx.str.clearRect(5 ,0 , 100, 30);
+		ctx.str.fillText(( minute + "'" + second + "\"" + (recodeTenMillSecond % 100)), 10, 15);
+		
+		timeAlterCount = 0;
+		
+	}
+	
+	
 }
+
+
+
+// åœæ­¢å‡¦ç†
+function stop(){
+	clearInterval(mainTimer);
+	clearInterval(recodeTimer);
+	mainTimer = -1;
+	recodeTimer = -1;
+	
+	second = Math.floor(recodeTenMillSecond / 100);
+	minute = Math.floor(second / 60);
+	second %= 60;
+	
+	if (second < 10) {
+		second = "0" + second;
+	}
+	
+	ctx.str.clearRect(5 ,0 , 100, 30);
+	ctx.str.fillText(( minute + "'" + second + "\"" + (recodeTenMillSecond % 100)), 10, 15);
+	
+}
+
+
+
+
+// ã‚´ãƒ¼ãƒ«  IDï¼š0
+function goalEvent(){
+	stop();
+	
+	ctx.str.font = "30px 'ï¼­ï¼³ ã‚´ã‚·ãƒƒã‚¯'";
+	ctx.str.fillText("ã‚´ãƒ¼ãƒ«ï¼", scWidth * 0.2, scHeight * 0.5);
+	
+	second = Math.floor(recodeTenMillSecond / 100);
+	minute = Math.floor(second / 60);
+	second %= 60;
+	
+	if (second < 10) {
+		second = "0" + second;
+	}
+	
+	ctx.str.clearRect(5 ,0 , 150, 30);
+	ctx.str.fillText(( minute + "'" + second + "\"" + (recodeTenMillSecond % 100)), scWidth * 0.3, (scHeight * 0.5 + 35));
+	
+}
+
+
+
+
+
+
 
