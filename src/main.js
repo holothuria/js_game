@@ -30,7 +30,7 @@ param = new parameters();
 player = new actor();
 player.img.file.src = "../img/player.png";
 player.img.sideDivide = 3;
-player.img.lengthDivide = 2;
+player.img.lengthDivide = 3;
 
 player.posX = scWidth / 2;
 player.posY = scHeight - chipHei;
@@ -366,12 +366,18 @@ function drowPlayer(){
 			
 		}
 		
+	} else if (pStatus.isTouchR) {
+		dStartX = player.img.width * 2;
+		
 	} else {
 		dStartX = 0;
 		
 	}
 	
-	if (0 < player.vectorX) {
+	if (pStatus.isTouchL || pStatus.isTouchR) {
+		dStartY = player.img.height * 2;
+		
+	} else if (0 < player.vectorX) {
 		dStartY = 0;
 		
 	} else {
