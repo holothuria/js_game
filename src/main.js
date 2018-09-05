@@ -44,7 +44,7 @@ player.vectorY = param.maxRunSpd;
 blcInf = [
 	new terrainBlock("", -1),
 	new terrainBlock("../img/block.png", -1),
-	new terrainBlock("", 0)
+	new terrainBlock("../img/goal.png", 0)
 ];
 
 // ゲームイベント配列の生成
@@ -719,6 +719,9 @@ function stop(){
 }
 
 
+
+// ==========================
+// ゲームイベント
 
 
 // ゴール  ID：0
