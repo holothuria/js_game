@@ -367,6 +367,14 @@ function mousedownEvent(event){
 function clickEvent(event){
 	pStatus.climbFlag = false;
 	
+	if ((getPageX(event) < (scWidth / 2)) && pStatus.isTouchL) {
+		return;
+		
+	} else if ((scWidth / 2) <= (getPageX(event)) && pStatus.isTouchR) {
+		return;
+		
+	}
+	
 	if (pStatus.isTouchB === true) {
 		jumpAction(event, true);
 		
