@@ -20,6 +20,13 @@ recodeTimer = -1;	// 記録用タイマー
 recodeTenMillSecond = 0;	// 経過時間(1/100秒)
 timeAlterCount = 0;			// 経過時間更新カウント
 
+actorName = null;	// 使用キャラ
+stageName = null;	// ステージ名
+userName = null;	// ユーザー名
+
+
+
+
 
 // オブジェクトの定義
 ctx = new ctxMng();
@@ -28,7 +35,7 @@ param = new parameters();
 
 // 主人公の生成
 player = new actor();
-player.img.file.src = "../img/player.png";
+player.img.file.src = "../data/img/player.png";
 player.img.sideDivide = 3;
 player.img.lengthDivide = 3;
 
@@ -43,52 +50,19 @@ player.vectorY = param.maxRunSpd;
 // 地形配置物オブジェクトの生成
 blcInf = [
 	new terrainBlock("", -1),
-	new terrainBlock("../img/block.png", -1),
-	new terrainBlock("../img/goal.png", 0)
+	new terrainBlock("../data/img/block.png", -1),
+	new terrainBlock("../data/img/goal.png", 0),
+	new terrainBlock("../data/img/urchin.png", 1)
 ];
 
 // ゲームイベント配列の生成
 gameEve = [
 	function(){
 		goalEvent();
+	},
+	function(){
+		lose();
 	}
-	
-];
-
-
-// コースデータ作成
-courseData = [
-	[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-	[2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-	[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
-	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-	[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-	[1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
 	
 ];
 
@@ -170,6 +144,142 @@ function terrainBlock(filePath, gameEventId){
 
 
 
+
+// コースデータ作成
+courseData = null;
+function settingStage(stageName){
+	if (stageName === "deathAndStage") {
+		courseData = [
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			[2, 0, 0, 0, 0, 0, 0, 0, 0, 3],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 1, 1, 3, 1, 1, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 3],
+			[0, 0, 3, 3, 1, 1, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 1, 3, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 3, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 3],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 1, 1, 1, 1, 1, 3, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 3, 0, 1, 1, 1, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 3]
+		];
+	} else {
+		courseData = [
+			[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			[2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+		];
+	}
+}
+
+
+
+
+
+
+// URLからgetパラメータを取得し、配列に格納
+function getUrlValues(){
+	let values = [];
+	let params = location.search.replace("?", "").split("&");
+	
+	var i = 0;
+	params.forEach(function(param){
+		values[i] = param.slice(param.indexOf("=") + 1);
+		i++;
+	});
+	
+	return values;
+}
+
+
+
+// 開始処理
+function start(){
+	
+	// キャンバス取得
+	canvas1 = document.getElementById("layer1");
+	canvas2 = document.getElementById("layer2");
+	canvas3 = document.getElementById("layer3");
+	ctx.blc = canvas1.getContext("2d");
+	ctx.ple = canvas2.getContext("2d");
+	ctx.str = canvas3.getContext("2d");
+	
+	// 画像サイズ取得
+	player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
+	player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
+	
+	// URLからGET取得
+	var values = getUrlValues();
+	actorName = values[0];
+	stageName = values[1];
+	userName = values[2];
+	
+	// 主人公の設定
+	
+	// ステージの設定
+	settingStage(stageName);
+	
+	
+	// 処理セッティング
+	document.addEventListener("mousedown", mousedownEvent);
+	document.addEventListener("touchstart", mousedownEvent);
+	document.addEventListener("mouseup", clickEvent);
+	document.addEventListener("touchend", clickEvent);
+	
+	mainTimer = setInterval("main()",45);
+	recodeTimer = setInterval("timeCount()", 10);
+	
+}
+
+
+
 // 重力
 function gravity(){
 	player.vectorY += 0.8;
@@ -204,37 +314,6 @@ function running(){
 	}
 	
 }
-
-
-
-
-
-// 開始処理
-function start(){
-	
-	// キャンバス取得
-	canvas1 = document.getElementById("layer1");
-	canvas2 = document.getElementById("layer2");
-	canvas3 = document.getElementById("layer3");
-	ctx.blc = canvas1.getContext("2d");
-	ctx.ple = canvas2.getContext("2d");
-	ctx.str = canvas3.getContext("2d");
-	
-	// 画像サイズ取得
-	player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
-	player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
-	
-	// 処理セッティング
-	document.addEventListener("mousedown", mousedownEvent);
-	document.addEventListener("touchstart", mousedownEvent);
-	document.addEventListener("mouseup", clickEvent);
-	document.addEventListener("touchend", clickEvent);
-	
-	mainTimer = setInterval("main()",45);
-	recodeTimer = setInterval("timeCount()", 10);
-	
-}
-
 
 
 
@@ -719,6 +798,15 @@ function stop(){
 }
 
 
+// 記録テキスト出力
+function recodeOutput(){
+	
+	
+	
+	
+	
+}
+
 
 // ==========================
 // ゲームイベント
@@ -749,11 +837,41 @@ function goalEvent(){
 	ctx.str.clearRect(5 ,0 , 150, 30);
 	ctx.str.fillText(( minute + "'" + second + "\"" + tenMillSecond), scWidth * 0.3, (scHeight * 0.5 + 35));
 	
+	recodeOutput();
+	
 }
 
 
 
-
+// やられてしまった！ ID: 1
+function lose(){
+	
+	stop();
+	
+	setTimeout(function(){
+		ctx.str.clearRect(5 ,0 , 150, 30);
+		ctx.str.font = "30px 'ＭＳ ゴシック'";
+		ctx.str.fillText("やられてしまった！", scWidth * 0.1, scHeight * 0.5);
+		
+		ctx.ple.fillStyle = 'red';
+		ctx.ple.fillRect(0, 0, scWidth, scHeight);
+		
+		setTimeout(function(){
+			let values = getUrlValues();
+			let param = "?";
+			
+			param += "actor=" + values[0] + "&";
+			param += "stage=" + values[1];
+			
+			window.location.href = "./index.html" + param;
+			
+		}, 1000);
+		
+		
+	}, 300);
+	
+	
+}
 
 
 

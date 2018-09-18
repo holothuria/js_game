@@ -1,0 +1,102 @@
+body{
+	width: 320px;
+	height: 416px;
+	box-sizing: border-box;
+	border: outset 5px #005000;
+	
+}
+
+#main{
+	padding: 5px 10px;
+	
+	
+}
+
+h1{
+	margin: -2px 0px 3px 0px;
+	padding: 0px;
+	border: inset #b9ffa5;
+	border-radius: 20px;
+	background: linear-gradient(#b9ffa5, #50cc30);
+	text-align: center;
+	font-size: 16px;
+	
+}
+
+.selectDiv{
+	margin: 0px 0px 5px 0px;
+	box-sizing: border-box;
+	border: inset #ddddbb;
+	background-color: #eeeecc;
+	box-shadow: 0px 0px 0px 5px #ffffff;
+	
+
+}
+
+.selectTitle{
+	font-size: 12px;
+	
+}
+
+#actorSelector, #stageSelector {
+	background: linear-gradient(#ffffff, #e0e0c0);
+	border: outset #ffdf90;
+	border-radius: 8px;
+	
+}
+
+#actorText, #stageText{
+	padding: 2px 4px;
+	margin: 3px 0px 5px 10px;
+	width: 92%;
+	height: 100px;
+	box-sizing: border-box;
+	border: solid 1px #eeffdd;
+	background-color: #ffffff;
+	box-shadow: 3px 3px 2px #50cc30;
+	font-size: 14px;
+	
+}
+
+
+.nameInput{
+	margin: 5px 0px;
+	text-align: center;
+	font-size: 12px;
+	
+
+}
+
+#nameInputer{
+	width: 100px;
+	
+}
+
+
+#startButtonDiv{
+	margin: 10px 0px;
+	text-align: center;
+	
+}
+
+#startButton{
+	width: 120px;
+	height: 40px;
+	border: outset #50cc30;
+	border-radius: 15px;
+	background: linear-gradient(#ffffff, #c0ffaa);
+	
+}
+
+
+
+
+
+@media (max-aspect-ratio: 3/4){
+	#body{
+		box-sizing: border-box;
+		width: 95vw;
+		
+	}
+}
+

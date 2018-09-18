@@ -1,19 +1,54 @@
 <!doctype html>
 <html>
 <head>
-	<title>じゃんぱー</title>
+	<title>じゃんぱーメニュー</title>
 	<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="master.css">
-	<script type="text/javascript" src="main.js"></script>
+	<link rel="stylesheet" type="text/css" href="menu_design.css">
+	<script type="text/javascript" src="menu.js"></script>
 </head>
 
-<body onLoad="start()">
-	<div id ="viewLayer">
-		<canvas id="layer1"  width="320" height="416"></canvas>
-		<canvas id="layer2"  width="320" height="416"></canvas>
-		<canvas id="layer3"  width="320" height="416"></canvas>
+<body>
+	<div id="main">
+		<h1> メニュー </h1>
+		<form name="menuForm" method="get" action="./main.html">
+			<div class="selectDiv">
+				<div>
+					<span class="selectTitle">キャラクター：</span>
+					<select id="actorSelector" name="actor">
+						<option value="boy">少年</option>
+<!--						<option value="dog">犬</option> -->
+					</select>
+				</div>
+				<div id="actorText">
+					普通の少年<br>特筆すべき能力はなく、平均で平凡が売り
+				</div>
+			</div>
+			
+			<div class="selectDiv">
+				<div>
+					<span class="selectTitle">ステージ：</span>
+					<select id="stageSelector" name="stage">
+						<option value="testStage">テストステージ</option>
+						<option value="deathAndStage">デスとステージ</option>
+					</select>
+				</div>
+				<div id="stageText">
+					平和なステージ。初めての人におすすめ
+				</div>
+			</div>
+			
+			<div class="nameInput">
+<!--
+				ユーザー名：<input id="nameInputer" type="text" name="userName">
+-->
+			</div>
+			
+			<div id="startButtonDiv">
+				<button id="startButton" type="submit">開始！</button>
+			</div>
+			
+		</form>
 	</div>
-	
 </body>
 </html>
