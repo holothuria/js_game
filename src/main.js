@@ -155,7 +155,7 @@ function settingStage(stageName){
 			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 1, 3, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[0, 0, 1, 1, 3, 1, 1, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -231,7 +231,7 @@ function getUrlValues(){
 	
 	var i = 0;
 	params.forEach(function(param){
-		values[i] = param.slice(param.indexOf("=") + 1);
+		values[i] = decodeURIComponent(param.slice(param.indexOf("=") + 1));
 		i++;
 	});
 	
@@ -826,9 +826,6 @@ function goalEvent(){
 	
 	stop();
 	
-	ctx.str.font = "30px 'ＭＳ ゴシック'";
-	ctx.str.fillText("ゴール！", scWidth * 0.2, scHeight * 0.5);
-	
 	second = Math.floor(recodeTenMillSecond / 100);
 	minute = Math.floor(second / 60);
 	second %= 60;
@@ -843,6 +840,10 @@ function goalEvent(){
 	}
 	
 	ctx.str.clearRect(5 ,0 , 150, 30);
+	
+	ctx.str.font = "30px 'ＭＳ ゴシック'";
+	ctx.str.fillText("ゴール！", scWidth * 0.2, (scHeight * 0.5 - 35));
+	ctx.str.fillText(getUrlValues()[2], scWidth * 0.1, scHeight * 0.5);
 	ctx.str.fillText(( minute + "'" + second + "\"" + tenMillSecond), scWidth * 0.3, (scHeight * 0.5 + 35));
 	
 	recodeOutput();
@@ -869,7 +870,8 @@ function lose(){
 			let param = "?";
 			
 			param += "actor=" + values[0] + "&";
-			param += "stage=" + values[1];
+			param += "stage=" + values[1] + "&";
+			param += "userName=" + values[2];
 			
 			window.location.href = "./index.html" + param;
 			

@@ -33,6 +33,7 @@ window.onload = function(){
 		
 	});
 	
+	document.menuForm.nameInputer.value = values[2];
 	
 	
 	document.getElementById("actorSelector").addEventListener("change", function(){
@@ -67,7 +68,7 @@ function getUrlValues(){
 	
 	var i = 0;
 	params.forEach(function(param){
-		values[i] = param.slice(param.indexOf("=") + 1);
+		values[i] = decodeURIComponent(param.slice(param.indexOf("=") + 1));
 		i++;
 	});
 	
