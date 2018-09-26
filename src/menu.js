@@ -80,8 +80,8 @@ function getUrlValues(){
 // 説明文変更メソッド
 function actorTextAlter(selectValue){
 	switch(selectValue){
-		case "dog":
-			text = "それは犬です";
+		case "lepusGirl":
+			text = "重力の影響が少ない幼女<br>全体的にゆったりとしているけれど、移動速度もゆっくり";
 			break;
 		
 		default:

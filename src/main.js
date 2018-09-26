@@ -25,26 +25,15 @@ stageName = null;	// ステージ名
 userName = null;	// ユーザー名
 
 
-
-
-
 // オブジェクトの定義
 ctx = new ctxMng();
 pStatus = new playerStatus();
 param = new parameters();
 
-// 主人公の生成
+
+// 主人公のオブジェクト生成
 player = new actor();
 player.img.file.src = "../data/img/player.png";
-player.img.sideDivide = 3;
-player.img.lengthDivide = 3;
-
-player.posX = scWidth / 2;
-player.posY = scHeight - chipHei;
-player.vectorX = param.maxRunSpd;
-player.vectorY = param.maxRunSpd;
-
-
 
 
 // 地形配置物オブジェクトの生成
@@ -98,6 +87,8 @@ function parameters(){
 	this.runAccel = 0.3;
 	
 	this.airRes = 0.1;
+	this.minAirRes = 0.2;
+	this.gravityRate = 1.00;
 	
 	this.jumpVecX = 5;
 	this.jumpVecY = -12;
@@ -142,6 +133,51 @@ function terrainBlock(filePath, gameEventId){
 	
 }
 
+
+
+// 主人公設定メソッド
+function settingActor(actorName){
+	
+	if (actorName === "lepusGirl") {
+		player.img.file.src = "../data/img/lepusGirl.png";
+		param.maxRunSpd = 3;
+		param.runAccel = 0.1;
+		
+		param.airRes = 0.03;
+		param.minAirRes = 1.2;
+		param.gravityRate = 0.30;
+		
+		param.jumpVecX = 3.5;
+		param.jumpVecY = -7;
+		param.airJumpVecX = 3.5;
+		param.airJumpVecY = -7;
+		
+		param.climbSpd = 1.5;
+			
+	} else {
+		// 少年になる
+		player.img.file.src = "../data/img/player.png";
+		
+		
+	}
+	
+	player.img.sideDivide = 3;
+	player.img.lengthDivide = 3;
+	player.posX = scWidth / 2;
+	player.posY = scHeight - chipHei;
+	player.vectorX = param.maxRunSpd;
+	player.vectorY = param.maxRunSpd;
+	
+	setTimeout(function(){
+		// 画像サイズ取得
+		player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
+		player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
+		
+	}, 100);
+	
+	
+	
+}
 
 
 
@@ -224,6 +260,7 @@ function settingStage(stageName){
 
 
 
+
 // URLからgetパラメータを取得し、配列に格納
 function getUrlValues(){
 	let values = [];
@@ -251,9 +288,6 @@ function start(){
 	ctx.ple = canvas2.getContext("2d");
 	ctx.str = canvas3.getContext("2d");
 	
-	// 画像サイズ取得
-	player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
-	player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
 	
 	// URLからGET取得
 	var values = getUrlValues();
@@ -262,6 +296,7 @@ function start(){
 	userName = values[2];
 	
 	// 主人公の設定
+	settingActor(actorName);
 	
 	// ステージの設定
 	settingStage(stageName);
@@ -282,17 +317,17 @@ function start(){
 
 // 重力
 function gravity(){
-	player.vectorY += 0.8;
+	player.vectorY += (0.8 * param.gravityRate);
 	
 }
 
 // 空気抵抗
 function airResist(){
 	if ((pStatus.isTouchB === false) && (pStatus.isTouchL === false) && (pStatus.isTouchR === false)) {
-		if (0.1 < player.vectorX) {
+		if (param.minAirRes < player.vectorX) {
 			player.vectorX -= param.airRes;
 		
-		} else if (player.vectorX < -0.1) {
+		} else if (player.vectorX < -param.minAirRes) {
 			player.vectorX += param.airRes;
 		}
 		
