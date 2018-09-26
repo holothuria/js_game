@@ -41,10 +41,14 @@ h1{
 }
 
 #actorSelector, #stageSelector {
-	background: linear-gradient(#ffffff, #e0e0c0);
-	border: outset #ffdf90;
-	border-radius: 8px;
+//	background: linear-gradient(#ffffff, #e0e0c0);
+//	border: outset #ffdf90;
+//	border-radius: 8px;
 	
+	background-color: #ffefa0;
+	border: none;
+	border-left: solid 5px #eec530;
+	box-shadow: 3px 2px 2px #aa8030;
 }
 
 #actorText, #stageText{
@@ -85,10 +89,18 @@ h1{
 #startButton{
 	width: 120px;
 	height: 40px;
-	border: outset #50cc30;
-	border-radius: 15px;
-	background: linear-gradient(#ffffff, #c0ffaa);
+//	border: outset #50cc30;
+//	border-radius: 15px;
+//	background: linear-gradient(#ffffff, #c0ffaa);
 	
+	background-color: #c0ffaa;
+	border: outset #a0ee40;
+	border-top: none;
+	border-left: none;
+//	border: solid 4px #000000;
+//	border-left: solid 8px #a0ee40;
+	box-shadow: 2px 2px 5px #80aa50;
+
 }
 
 
