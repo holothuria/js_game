@@ -39,9 +39,11 @@ player.img.file.src = "../data/img/player.png";
 // 地形配置物オブジェクトの生成
 blcInf = [
 	new terrainBlock("", -1),
-	new terrainBlock("../data/img/block.png", -1),
-	new terrainBlock("../data/img/goal.png", 0),
-	new terrainBlock("../data/img/urchin.png", 1)
+	new terrainBlock("../img/block/block.png", -1),
+	new terrainBlock("../img/block/goal.png", 0),
+	new terrainBlock("../img/block/urchin.png", 1),
+	new terrainBlock("../img/block/iceBlock.png", -1)
+	
 ];
 
 // ゲームイベント配列の生成
@@ -139,7 +141,7 @@ function terrainBlock(filePath, gameEventId){
 function settingActor(actorName){
 	
 	if (actorName === "lepusGirl") {
-		player.img.file.src = "../data/img/lepusGirl.png";
+		player.img.file.src = "../img/actor/lepusGirl.png";
 		param.maxRunSpd = 3;
 		param.runAccel = 0.1;
 		
@@ -156,7 +158,7 @@ function settingActor(actorName){
 			
 	} else {
 		// 少年になる
-		player.img.file.src = "../data/img/player.png";
+		player.img.file.src = "../img/actor/player.png";
 		
 		
 	}
@@ -247,7 +249,7 @@ function settingStage(stageName){
 			[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-			[0, 0, 0, 1, 1, 1, 0, 1, 0, 0],
+			[0, 0, 0, 4, 4, 4, 0, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
