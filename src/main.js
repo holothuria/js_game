@@ -175,7 +175,7 @@ function settingActor(actorName){
 		player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
 		player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
 		
-	}, 20);
+	}, 50);
 	
 	
 	
