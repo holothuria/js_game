@@ -174,10 +174,7 @@ function settingActor(actorName){
 		// 画像サイズ取得
 		player.img.width = (player.img.file.naturalWidth / player.img.sideDivide);
 		player.img.height = (player.img.file.naturalHeight / player.img.lengthDivide);
-		
-	}, 50);
-	
-	
+	}, 500);
 	
 }
 
@@ -279,7 +276,7 @@ function getUrlValues(){
 
 
 
-// 開始処理
+// 開始前処理
 function start(){
 	
 	// キャンバス取得
@@ -303,6 +300,22 @@ function start(){
 	// ステージの設定
 	settingStage(stageName);
 	
+	// 実開始処理の設定
+	document.addEventListener("mouseup", startEvent)
+	document.addEventListener("touchend", startEvent)
+	
+	ctx.str.font = "30px 'ＭＳ ゴシック'";
+	ctx.str.fillText("クリックでスタート", scWidth * 0.1, scHeight * 0.5);
+	
+}
+
+// 開始処理
+function startEvent(){
+	ctx.str.clearRect(0, 0, scWidth, scHeight);
+	ctx.str.font = "12px 'ＭＳ ゴシック'"
+	
+	document.removeEventListener("mouseup", startEvent);
+	document.removeEventListener("touchend", startEvent)
 	
 	// 処理セッティング
 	document.addEventListener("mousedown", mousedownEvent);
