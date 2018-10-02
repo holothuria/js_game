@@ -38,11 +38,11 @@ player.img.file.src = "../data/img/player.png";
 
 // 地形配置物オブジェクトの生成
 blcInf = [
-	new terrainBlock("", -1),
-	new terrainBlock("../img/block/block.png", -1),
-	new terrainBlock("../img/block/goal.png", 0),
-	new terrainBlock("../img/block/urchin.png", 1),
-	new terrainBlock("../img/block/iceBlock.png", -1)
+	new terrainBlock("", 1.0,-1),
+	new terrainBlock("../img/block/block.png", 1.0, -1),
+	new terrainBlock("../img/block/goal.png", 1.0, 0),
+	new terrainBlock("../img/block/urchin.png", 1.0, 1),
+	new terrainBlock("../img/block/iceBlock.png", 2.0, -1)
 	
 ];
 
@@ -79,6 +79,7 @@ function playerStatus(){
 	this.isTouchR = false;
 	this.isTouchB = false;
 	
+	this.terSlipRate = 1.00;
 
 }
 
@@ -127,11 +128,11 @@ function actor(){
 
 
 // 地形ブロック
-function terrainBlock(filePath, gameEventId){
+function terrainBlock(filePath, slipRate, gameEventId){
 	this.file = new Image();
 	this.file.src = filePath;
+	this.slipRate = slipRate;
 	this.gameEventId = gameEventId;
-
 	
 }
 
@@ -244,9 +245,9 @@ function settingStage(stageName){
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[0, 0, 1, 1, 1, 1, 1, 1, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
-			[0, 0, 0, 4, 4, 4, 0, 1, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
+			[0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
+			[0, 0, 0, 4, 4, 4, 0, 4, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
@@ -381,7 +382,7 @@ function main() {
 	courseDrow();
 	drowPlayer();
 	
-
+	
 	// 移動前座標の保存
 	player.posBfrX = player.posX;
 	player.posBfrY = player.posY;
@@ -389,7 +390,11 @@ function main() {
 	// 座標移動
 	player.posX += player.vectorX;
 	player.posY += player.vectorY;
-
+	
+	// ステータスリセット
+	pStatus.terSlipRate = 1.00;
+	
+	// 接触判定
 	touchJudge();
 
 }
@@ -717,10 +722,11 @@ function touchJudge(){
 		} else {
 			player.vectorX = -0.1;
 			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd;
+				player.vectorY = -param.climbSpd / pStatus.terSlipRate;
 				
+					
 			} else {
-				player.vectorY = 0.5;
+				player.vectorY = 0.5 * pStatus.terSlipRate;
 				
 			}
 		}
@@ -735,10 +741,10 @@ function touchJudge(){
 		} else {
 			player.vectorX = 0.1;
 			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd;
+				player.vectorY = -param.climbSpd / pStatus.terSlipRate;
 				
 			} else {
-				player.vectorY = 0.5;
+				player.vectorY = 0.5 * pStatus.terSlipRate;
 				
 			}
 			
@@ -794,6 +800,7 @@ function isInWall(posX, posY){
 	}
 	
 	nowSection = courseData[posY][posX];
+	pStatus.terSlipRate *= blcInf[nowSection].slipRate;
 	
 	if (blcInf[nowSection].gameEventId !== -1) {
 		gameEve[blcInf[nowSection].gameEventId]();
