@@ -101,6 +101,9 @@ function stageTextAlter(selectValue){
 		case "deathAndStage":
 			text = "危険に満ちたステージ。すぐやられます";
 			break;
+		case "iceStage":
+			text = "滑りやすい氷のステージ。つかまりにくい！";
+			break;
 		default:
 			text = defaultStageText;
 	
