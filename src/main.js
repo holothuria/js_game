@@ -38,11 +38,11 @@ player.img.file.src = "../data/img/player.png";
 
 // 地形配置物オブジェクトの生成
 blcInf = [
-	new terrainBlock("", 1.0,-1),
+	new terrainBlock("", 0.0,-1),
 	new terrainBlock("../img/block/block.png", 1.0, -1),
 	new terrainBlock("../img/block/goal.png", 1.0, 0),
 	new terrainBlock("../img/block/urchin.png", 1.0, 1),
-	new terrainBlock("../img/block/iceBlock.png", 2.0, -1)
+	new terrainBlock("../img/block/iceBlock.png", 0.15, -1)
 	
 ];
 
@@ -79,7 +79,7 @@ function playerStatus(){
 	this.isTouchR = false;
 	this.isTouchB = false;
 	
-	this.terSlipRate = 1.00;
+	this.terResValue = 0.00;
 
 }
 
@@ -128,10 +128,10 @@ function actor(){
 
 
 // 地形ブロック
-function terrainBlock(filePath, slipRate, gameEventId){
+function terrainBlock(filePath, resValue, gameEventId){
 	this.file = new Image();
 	this.file.src = filePath;
-	this.slipRate = slipRate;
+	this.resValue = resValue;
 	this.gameEventId = gameEventId;
 	
 }
@@ -392,7 +392,7 @@ function main() {
 	player.posY += player.vectorY;
 	
 	// ステータスリセット
-	pStatus.terSlipRate = 1.00;
+	pStatus.terResValue = 0.00;
 	
 	// 接触判定
 	touchJudge();
@@ -620,12 +620,14 @@ function touchJudge(){
 	// 画面端の判定
 	if (player.posX <= 0) {
 		isTchL = true;
+		pStatus.terResValue += 2.0;
 	}
 	if (player.posY <= 0) {
 		isTchT = true;
 	}
 	if ((scWidth - player.img.width) <= player.posX) {
 		isTchR = true;
+		pStatus.terResValue += 2.0;
 	}
 	
 	if ((scHeight - player.img.height) <= player.posY) {
@@ -722,11 +724,11 @@ function touchJudge(){
 		} else {
 			player.vectorX = -0.1;
 			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd / pStatus.terSlipRate;
+				player.vectorY = -param.climbSpd * (pStatus.terResValue / 2);
 				
 					
 			} else {
-				player.vectorY = 0.5 * pStatus.terSlipRate;
+				player.vectorY = 0.5 / (pStatus.terResValue / 2) * param.gravityRate;
 				
 			}
 		}
@@ -741,10 +743,10 @@ function touchJudge(){
 		} else {
 			player.vectorX = 0.1;
 			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd / pStatus.terSlipRate;
+				player.vectorY = -param.climbSpd * (pStatus.terResValue / 2);
 				
 			} else {
-				player.vectorY = 0.5 * pStatus.terSlipRate;
+				player.vectorY = 0.5 / (pStatus.terResValue / 2) * param.gravityRate;
 				
 			}
 			
@@ -800,7 +802,7 @@ function isInWall(posX, posY){
 	}
 	
 	nowSection = courseData[posY][posX];
-	pStatus.terSlipRate *= blcInf[nowSection].slipRate;
+	pStatus.terResValue += blcInf[nowSection].resValue;
 	
 	if (blcInf[nowSection].gameEventId !== -1) {
 		gameEve[blcInf[nowSection].gameEventId]();
