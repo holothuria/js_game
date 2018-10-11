@@ -42,7 +42,8 @@ blcInf = [
 	new terrainBlock("../img/block/block.png", 1.0, -1),
 	new terrainBlock("../img/block/goal.png", 1.0, 0),
 	new terrainBlock("../img/block/urchin.png", 1.0, 1),
-	new terrainBlock("../img/block/iceBlock.png", 0.15, -1)
+	new terrainBlock("../img/block/iceBlock.png", 0.15, -1),
+	new terrainBlock("../img/block/upper.png", 0.0, 2)
 	
 ];
 
@@ -53,8 +54,10 @@ gameEve = [
 	},
 	function(){
 		lose();
+	},
+	function(){
+		upper();
 	}
-	
 ];
 
 
@@ -80,6 +83,8 @@ function playerStatus(){
 	this.isTouchB = false;
 	
 	this.terResValue = 0.00;
+	
+	this.eventFlag = false;
 
 }
 
@@ -268,12 +273,12 @@ function settingStage(stageName){
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+			[0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0, 1, 1, 0, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-			[1, 1, 1, 0, 0, 0, 0, 0, 0, 1],
+			[1, 5, 1, 0, 0, 0, 0, 0, 0, 1],
 			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			[0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -284,7 +289,7 @@ function settingStage(stageName){
 			[0, 0, 0, 4, 4, 4, 0, 4, 0, 0],
 			[0, 0, 0, 0, 0, 0, 0, 1, 0, 0],
 			[1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+			[1, 1, 1, 0, 0, 0, 0, 0, 0, 5]
 		];
 	}
 }
@@ -427,6 +432,7 @@ function main() {
 	
 	// ステータスリセット
 	pStatus.terResValue = 0.00;
+	pStatus.eventFlag = false;
 	
 	// 接触判定
 	touchJudge();
@@ -675,6 +681,10 @@ function touchJudge(){
 	isWall[2] = isInWall(biggerPosX, biggerPosY);
 	isWall[3] = isInWall(player.posX, biggerPosY);
 	
+	if (pStatus.eventFlag) {
+		return;
+	}
+	
 	if (isWall[0] && isWall[1]) {
 		isTchT = true;
 	}
@@ -840,6 +850,7 @@ function isInWall(posX, posY){
 	
 	if (blcInf[nowSection].gameEventId !== -1) {
 		gameEve[blcInf[nowSection].gameEventId]();
+		pStatus.eventFlag = true;
 	}
 	
 	return nowSection !== 0;
@@ -977,4 +988,16 @@ function lose(){
 }
 
 
+// 強制ジャンプ
+function upper() {
+	player.vectorY = -15;
+	
+	if (pStatus.isTouchR) {
+		player.vectorX = -0.5;
+	} else if (pStatus.isTouchL) {
+		player.vectorX = 0.5;
+	}
+	
+//	player.posX = (Math.floor(player.posX / chipWid) * chipWid) + (player.img.width / 2)
 
+}
