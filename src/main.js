@@ -84,7 +84,7 @@ function playerStatus(){
 	
 	this.terResValue = 0.00;
 	
-	this.eventFlag = false;
+	this.upperFlag = false;
 
 }
 
@@ -432,7 +432,7 @@ function main() {
 	
 	// ステータスリセット
 	pStatus.terResValue = 0.00;
-	pStatus.eventFlag = false;
+	pStatus.upperFlag = false;
 	
 	// 接触判定
 	touchJudge();
@@ -681,9 +681,6 @@ function touchJudge(){
 	isWall[2] = isInWall(biggerPosX, biggerPosY);
 	isWall[3] = isInWall(player.posX, biggerPosY);
 	
-	if (pStatus.eventFlag) {
-		return;
-	}
 	
 	if (isWall[0] && isWall[1]) {
 		isTchT = true;
@@ -807,8 +804,10 @@ function touchJudge(){
 			player.posY += nowRowScr;
 			
 		}
+		if (!pStatus.upperFlag) {
+			player.vectorY = 0;
+		}
 		
-		player.vectorY = 0;
 		pStatus.remAirJump = 1;
 		ctx.ple.globalAlpha = 1.0;
 		
@@ -850,7 +849,6 @@ function isInWall(posX, posY){
 	
 	if (blcInf[nowSection].gameEventId !== -1) {
 		gameEve[blcInf[nowSection].gameEventId]();
-		pStatus.eventFlag = true;
 	}
 	
 	return nowSection !== 0;
@@ -997,6 +995,7 @@ function upper() {
 	} else if (pStatus.isTouchL) {
 		player.vectorX = 0.5;
 	}
+	pStatus.upperFlag = true;
 	
 //	player.posX = (Math.floor(player.posX / chipWid) * chipWid) + (player.img.width / 2)
 
