@@ -908,8 +908,16 @@ function stop(){
 }
 
 
-// 記録テキスト出力
-function recodeOutput(){
+// メニューに戻る
+function returnMenu(){
+	let values = getUrlValues();
+	let param = "?";
+	
+	param += "actor=" + values[0] + "&";
+	param += "stage=" + values[1] + "&";
+	param += "userName=" + values[2];
+	
+	window.location.href = "./index.html" + param;
 	
 	
 	
@@ -948,7 +956,7 @@ function goalEvent(){
 	ctx.str.fillText(getUrlValues()[2], scWidth * 0.1, scHeight * 0.5);
 	ctx.str.fillText(( minute + "'" + second + "\"" + tenMillSecond), scWidth * 0.3, (scHeight * 0.5 + 35));
 	
-	recodeOutput();
+	document.addEventListener("click", returnMenu)
 	
 }
 
@@ -964,20 +972,10 @@ function lose(){
 		ctx.str.font = "30px 'ＭＳ ゴシック'";
 		ctx.str.fillText("やられてしまった！", scWidth * 0.1, scHeight * 0.5);
 		
-		ctx.ple.fillStyle = 'red';
-		ctx.ple.fillRect(0, 0, scWidth, scHeight);
+		ctx.blc.fillStyle = 'red';
+		ctx.blc.fillRect(0, 0, scWidth, scHeight);
 		
-		setTimeout(function(){
-			let values = getUrlValues();
-			let param = "?";
-			
-			param += "actor=" + values[0] + "&";
-			param += "stage=" + values[1] + "&";
-			param += "userName=" + values[2];
-			
-			window.location.href = "./index.html" + param;
-			
-		}, 1000);
+		setTimeout("returnMenu()", 1000);
 		
 		
 	}, 300);
@@ -986,7 +984,7 @@ function lose(){
 }
 
 
-// 強制ジャンプ
+// 強制ジャンプ ID:2
 function upper() {
 	player.vectorY = -15;
 	
