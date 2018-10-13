@@ -764,14 +764,8 @@ function touchJudge(){
 			
 		} else {
 			player.vectorX = -0.1;
-			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd * (pStatus.terResValue / 2);
-				
-					
-			} else {
-				player.vectorY = 0.5 / (pStatus.terResValue / 2) * param.gravityRate;
-				
-			}
+			climbCalc();
+			
 		}
 		
 	}
@@ -783,13 +777,7 @@ function touchJudge(){
 			
 		} else {
 			player.vectorX = 0.1;
-			if (pStatus.climbFlag) {
-				player.vectorY = -param.climbSpd * (pStatus.terResValue / 2);
-				
-			} else {
-				player.vectorY = 0.5 / (pStatus.terResValue / 2) * param.gravityRate;
-				
-			}
+			climbCalc();
 			
 		}
 		
@@ -853,6 +841,24 @@ function isInWall(posX, posY){
 	
 	return nowSection !== 0;
 
+}
+
+
+
+
+// 壁張り付き上下移動計算
+function climbCalc(){
+	if (!pStatus.upperFlag){
+		if (pStatus.climbFlag) {
+			player.vectorY = -param.climbSpd * (pStatus.terResValue / 2);
+			
+				
+		} else {
+			player.vectorY = 0.5 / (pStatus.terResValue / 2) * param.gravityRate;
+			
+		}
+	}
+	
 }
 
 
