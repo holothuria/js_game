@@ -299,7 +299,6 @@ function settingStage(stageName){
 
 
 
-
 // URLからgetパラメータを取得し、配列に格納
 function getUrlValues(){
 	let values = [];
@@ -340,13 +339,17 @@ function start(){
 	// ステージの設定
 	settingStage(stageName);
 	
-	// 実開始処理の設定
-	document.addEventListener("mouseup", startEvent)
-	document.addEventListener("touchend", startEvent)
+	// 実開始処理の設定 画像等ロード用に500ms待機
+	setTimeout(function(){
+		document.addEventListener("mouseup", startEvent)
+		document.addEventListener("touchend", startEvent)
+		
+		ctx.str.font = "30px 'ＭＳ ゴシック'";
+		ctx.str.fillText("クリックでスタート", scWidth * 0.1, scHeight * 0.4);
+		ctx.str.fillText("※ 音が鳴ります！", scWidth * 0.1, scHeight * 0.6);
 	
-	ctx.str.font = "30px 'ＭＳ ゴシック'";
-	ctx.str.fillText("クリックでスタート", scWidth * 0.1, scHeight * 0.4);
-	ctx.str.fillText("※ 音が鳴ります！", scWidth * 0.1, scHeight * 0.6);
+	}, 500);
+	
 	
 }
 
