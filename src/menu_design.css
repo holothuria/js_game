@@ -84,7 +84,7 @@ h1{
 
 #startButton{
 	width: 120px;
-	height: 40px;
+	height: 35px;
 	background-color: #c0ffaa;
 	border: outset #a0ee40;
 	border-top: none;
@@ -94,6 +94,13 @@ h1{
 }
 
 
+#caution{
+	
+	padding: -10px 0px;
+	margin: -10px 0px;
+	text-align: center;
+	font-size: 12px;
+}
 
 
 

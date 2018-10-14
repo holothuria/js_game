@@ -345,7 +345,8 @@ function start(){
 	document.addEventListener("touchend", startEvent)
 	
 	ctx.str.font = "30px 'ＭＳ ゴシック'";
-	ctx.str.fillText("クリックでスタート", scWidth * 0.1, scHeight * 0.5);
+	ctx.str.fillText("クリックでスタート", scWidth * 0.1, scHeight * 0.4);
+	ctx.str.fillText("※ 音が鳴ります！", scWidth * 0.1, scHeight * 0.6);
 	
 }
 
@@ -362,6 +363,8 @@ function startEvent(){
 	document.addEventListener("touchstart", mousedownEvent);
 	document.addEventListener("mouseup", clickEvent);
 	document.addEventListener("touchend", clickEvent);
+	
+	document.getElementById("bgm").play();
 	
 	mainTimer = setInterval("main()",45);
 	recodeTimer = setInterval("timeCount()", 10);
