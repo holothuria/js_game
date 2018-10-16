@@ -84,6 +84,10 @@ function actorTextAlter(selectValue){
 			text = "重力の影響が少ない幼女<br>全体的にゆったりとしているけれど、移動速度もゆっくり";
 			break;
 		
+		case "ranaGirl":
+			text = "跳ねる少女<br>歩くことができず、壁も登れないが、空中で3回ジャンプできる";
+			break;
+		
 		default:
 			text = defaultActorText;
 			break;

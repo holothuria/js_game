@@ -75,6 +75,7 @@ function ctxMng(){
 // プレイヤー状態
 function playerStatus(){
 	this.remAirJump = 0;
+	this.maxAirJump = 1;
 	this.climbFlag = false;
 	
 	this.isTouchT = false;
@@ -161,7 +162,23 @@ function settingActor(actorName){
 		param.airJumpVecY = -7;
 		
 		param.climbSpd = 1.5;
-			
+		
+	} else if(actorName === "ranaGirl") {
+		player.img.file.src = "../img/actor/ranaGirl.png";
+		param.maxRunSpd = 5;
+		param.runAccel = -0.2;
+		
+		param.maxAirJump = 3;
+		param.airRes = 0.05;
+		param.minAirRes = 1.0;
+		
+		param.jumpVecX = 5;
+		param.jumpVecY = -15;
+		param.airJumpVecX = 4;
+		param.airJumpVecY = -13;
+		
+		param.climbSpd = 0;
+		
 	} else {
 		// 少年になる
 		player.img.file.src = "../img/actor/player.png";
@@ -400,14 +417,21 @@ function airResist(){
 function running(){
 	if (pStatus.isTouchB === true) {
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
-			if (0 < player.vectorX) {
-				player.vectorX += param.runAccel;
+			let tmpAccel = param.runAccel;
 			
-			} else {
-				player.vectorX += -param.runAccel;
+			if (player.vectorX < 0) {
+				tmpAccel *= -1;
 			}
+			
+			if (param.runAccel < 0) {
+				tmpAccel = -player.vectorX;
+			} 
+			player.vectorX += tmpAccel;
+			
+			
 		}
 	}
+	
 	
 }
 
@@ -802,7 +826,7 @@ function touchJudge(){
 			player.vectorY = 0;
 		}
 		
-		pStatus.remAirJump = 1;
+		pStatus.remAirJump = param.maxAirJump;
 		ctx.ple.globalAlpha = 1.0;
 		
 	}
