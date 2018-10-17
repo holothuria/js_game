@@ -75,7 +75,6 @@ function ctxMng(){
 // プレイヤー状態
 function playerStatus(){
 	this.remAirJump = 0;
-	this.maxAirJump = 1;
 	this.climbFlag = false;
 	
 	this.isTouchT = false;
@@ -94,7 +93,8 @@ function playerStatus(){
 function parameters(){
 	this.maxRunSpd = 5;
 	this.runAccel = 0.3;
-	
+
+	this.maxAirJump = 1;
 	this.airRes = 0.1;
 	this.minAirRes = 0.2;
 	this.gravityRate = 1.00;
