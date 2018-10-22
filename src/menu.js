@@ -88,6 +88,10 @@ function actorTextAlter(selectValue){
 			text = "跳ねる少女<br>歩くことができず、壁も登れないが、空中で3回ジャンプできる";
 			break;
 		
+		case "corvusMan":
+			text = "天高く跳び、滑るように飛ぶ男<br>地上からは真っ直ぐ上へと飛び上がり、空中や壁からは滑空するかのようなジャンプとなる";
+			break;
+		
 		default:
 			text = defaultActorText;
 			break;

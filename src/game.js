@@ -82,6 +82,8 @@ function playerStatus(){
 	this.isTouchR = false;
 	this.isTouchB = false;
 	
+	this.justJumpFlag = false;
+	
 	this.terResValue = 0.00;
 	
 	this.upperFlag = false;
@@ -101,6 +103,8 @@ function parameters(){
 	
 	this.jumpVecX = 5;
 	this.jumpVecY = -12;
+	this.wallJumpVecX = this.jumpVecX;
+	this.wallJumpVecY = this.jumpVecY;
 	this.airJumpVecX = 4.5;
 	this.airJumpVecY = -10;
 	
@@ -158,6 +162,8 @@ function settingActor(actorName){
 		
 		param.jumpVecX = 3.5;
 		param.jumpVecY = -7;
+		param.wallJumpVecX = 4;
+		param.wallJumpVecY = -6.5;
 		param.airJumpVecX = 3.5;
 		param.airJumpVecY = -7;
 		
@@ -165,8 +171,8 @@ function settingActor(actorName){
 		
 	} else if(actorName === "ranaGirl") {
 		player.img.file.src = "../img/actor/ranaGirl.png";
-		param.maxRunSpd = 5;
-		param.runAccel = -0.2;
+		param.maxRunSpd = 0;
+		param.runAccel = 2;
 		
 		param.maxAirJump = 3;
 		param.airRes = 0.05;
@@ -174,10 +180,24 @@ function settingActor(actorName){
 		
 		param.jumpVecX = 5;
 		param.jumpVecY = -15;
+		param.wallJumpVecX = 6;
+		param.wallJumpVecY = -14;
 		param.airJumpVecX = 4;
 		param.airJumpVecY = -13;
 		
 		param.climbSpd = 0;
+		
+	} else if (actorName === "corvusMan") {
+		player.img.file.src = "../img/actor/corvusMan.png";
+		param.airRes = 0;
+		param.gravityRate = 0.70;
+		
+		param.jumpVecX = 0;
+		param.jumpVecY = -18;
+		param.wallJumpVecX = 8;
+		param.wallJumpVecY = -3.5;
+		param.airJumpVecX = 7;
+		param.airJumpVecY = 0;
 		
 	} else {
 		// 少年になる
@@ -416,22 +436,28 @@ function airResist(){
 // 走行
 function running(){
 	if (pStatus.isTouchB === true) {
+		let tmpAccel = param.runAccel;
+		if (player.vectorX < 0) {
+			tmpAccel *= -1;
+		}
 		if (Math.abs(player.vectorX) < param.maxRunSpd) {
-			let tmpAccel = param.runAccel;
 			
-			if (player.vectorX < 0) {
-				tmpAccel *= -1;
-			}
-			
-			if (param.runAccel < 0) {
-				tmpAccel = -player.vectorX;
-			} 
 			player.vectorX += tmpAccel;
 			
+		} else if (!param.justJumpFlag) {
+			if (Math.abs(player.vectorX) < Math.abs(tmpAccel)) {
+				player.vectorX = 0;
+			} else {
+				player.vectorX -= tmpAccel;
+			
+			}
 			
 		}
+		
+		
 	}
 	
+	param.justJumpFlag = false;
 	
 }
 
@@ -500,33 +526,33 @@ function clickEvent(event){
 		
 	}
 	
-	if (pStatus.isTouchB === true) {
-		jumpAction(event, true);
-		
-	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
-		jumpAction(event, true);
+	jumpAction(event);
 	
-	} else if (1 <= pStatus.remAirJump) {
-		jumpAction(event, false);
-	}
 	
 }
 
 
 // ジャンプ
-function jumpAction(e, landFlag){
+function jumpAction(e){
 	
-	if (landFlag) {
+	param.justJumpFlag = true;
+	
+	if (pStatus.isTouchB === true) {
 		vecX = param.jumpVecX;
 		vecY = param.jumpVecY;
 		
-	} else {
+	} else if ((pStatus.isTouchL === true) || (pStatus.isTouchR === true)) {
+		vecX = param.wallJumpVecX;
+		vecY = param.wallJumpVecY;
+		
+	} else if (1 <= pStatus.remAirJump) {
 		vecX = param.airJumpVecX;
 		vecY = param.airJumpVecY;
 		pStatus.remAirJump -= 1;
 		ctx.ple.globalAlpha = 0.7;
 		
 	}
+	
 	
 	if (getPageX(event) < (scWidth / 2)) {
 		player.vectorX = -vecX;
