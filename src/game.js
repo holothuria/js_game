@@ -551,6 +551,9 @@ function jumpAction(e){
 		pStatus.remAirJump -= 1;
 		ctx.ple.globalAlpha = 0.7;
 		
+	} else {
+		return;
+		
 	}
 	
 	
