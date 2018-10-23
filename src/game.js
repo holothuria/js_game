@@ -1063,3 +1063,4 @@ function upper() {
 //	player.posX = (Math.floor(player.posX / chipWid) * chipWid) + (player.img.width / 2)
 
 }
+
