@@ -391,18 +391,25 @@ function start(){
 }
 
 // 開始処理
-function startEvent(){
+function startEvent(event){
 	ctx.str.clearRect(0, 0, scWidth, scHeight);
 	ctx.str.font = "12px 'ＭＳ ゴシック'"
 	
 	document.removeEventListener("mouseup", startEvent);
 	document.removeEventListener("touchend", startEvent)
 	
+	
 	// 処理セッティング
-	document.addEventListener("mousedown", mousedownEvent);
-	document.addEventListener("touchstart", mousedownEvent);
-	document.addEventListener("mouseup", clickEvent);
-	document.addEventListener("touchend", clickEvent);
+	if (event.changedTouches) {
+		document.addEventListener("touchstart", mousedownEvent);
+		document.addEventListener("touchend", clickEvent);
+		
+	} else {
+		document.addEventListener("mousedown", mousedownEvent);
+		document.addEventListener("mouseup", clickEvent);
+		
+	}
+	
 	
 	document.getElementById("bgm").play();
 	
@@ -410,6 +417,7 @@ function startEvent(){
 	recodeTimer = setInterval("timeCount()", 10);
 	
 }
+
 
 
 
